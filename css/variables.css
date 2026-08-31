@@ -1,0 +1,204 @@
+/* ==========================================================================
+   SOLANUM - DESIGN SYSTEM & CSS VARIABLES
+   Configuración global de variables, tipografía, paleta de colores y utilidades
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. TIPOGRAFÍA LOCAL (GOTHAM)
+   -------------------------------------------------------------------------- */
+@font-face {
+  font-family: 'Gotham';
+  src: url('../fonts/gotham/gotham_book.otf') format('opentype'),
+       url('../fonts/gotham/gotham_book_regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gotham';
+  src: url('../fonts/gotham/gotham_medium.otf') format('opentype'),
+       url('../fonts/gotham/gotham_medium_regular.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gotham';
+  src: url('../fonts/gotham/gotham_bold.otf') format('opentype'),
+       url('../fonts/gotham/gotham_bold_regular.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gotham';
+  src: url('../fonts/gotham/gotham_black.otf') format('opentype'),
+       url('../fonts/gotham/gotham_black_regular.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --------------------------------------------------------------------------
+   2. VARIABLES GLOBALES / DESIGN TOKENS
+   -------------------------------------------------------------------------- */
+:root {
+  /* --- PALETA DE COLORES --- */
+  /* Colores de marca y secciones */
+  --color-header-footer: #960019;       /* Borgoña / Rojo oscuro institucional */
+  --color-header-footer-rgb: 150, 0, 25;
+
+  --color-bg-seccion: #296D2B;          /* Verde principal fondo sección */
+  --color-bg-seccion-rgb: 41, 109, 43;
+
+  --color-nosotros: #AE240D;            /* Rojo terracota / Nosotros */
+  --color-nosotros-rgb: 174, 36, 13;
+
+  --color-drones: #D35E15;              /* Naranja / Drones */
+  --color-drones-rgb: 211, 94, 21;
+
+  --color-whatsapp: #25D366;            /* Verde WhatsApp */
+  --color-whatsapp-rgb: 37, 211, 102;
+
+  /* Neutros auxiliares */
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+  --color-gray-bg: #EAEAEA;
+  --color-text-dark: #1E1E1E;
+  --color-text-light: #FFFFFF;
+
+  /* --- TIPOGRAFÍA (FAMILIAS Y PESOS) --- */
+  --font-family-base: 'Gotham', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  --font-weight-book: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  /* --- TAMAÑOS DE FUENTE (EXACTOS SEGÚN GUÍA) --- */
+  /* 1. Título Portadas: Gotham Black 96px */
+  --fs-titulo-portada: 96px;
+  --fs-titulo-portada-rem: 6rem;               /* 96px / 16px */
+  --fs-titulo-portada-fluid: clamp(2.5rem, 6vw + 1rem, 6rem); /* Adaptable a móvil/desktop */
+
+  /* 2. Título Sección: Gotham Black 62px */
+  --fs-titulo-seccion: 62px;
+  --fs-titulo-seccion-rem: 3.875rem;           /* 62px / 16px */
+  --fs-titulo-seccion-fluid: clamp(2rem, 4vw + 1rem, 3.875rem);
+
+  /* 3. Subtítulo: Gotham Book 32px */
+  --fs-subtitulo: 32px;
+  --fs-subtitulo-rem: 2rem;                    /* 32px / 16px */
+  --fs-subtitulo-fluid: clamp(1.25rem, 2vw + 0.75rem, 2rem);
+
+  /* 4. Párrafo: Gotham Book 24px */
+  --fs-parrafo: 24px;
+  --fs-parrafo-rem: 1.5rem;                    /* 24px / 16px */
+  --fs-parrafo-fluid: clamp(1rem, 1.2vw + 0.5rem, 1.5rem);
+
+  /* Alturas de línea (Line Height) */
+  --lh-tight: 1.05;
+  --lh-heading: 1.15;
+  --lh-subheading: 1.3;
+  --lh-body: 1.5;
+
+  /* --- ESPACIADOS Y LAYOUT --- */
+  --spacing-xs: 0.5rem;   /* 8px */
+  --spacing-sm: 1rem;     /* 16px */
+  --spacing-md: 1.5rem;   /* 24px */
+  --spacing-lg: 2rem;     /* 32px */
+  --spacing-xl: 3rem;     /* 48px */
+  --spacing-2xl: 4rem;    /* 64px */
+  --spacing-3xl: 6rem;    /* 96px */
+
+  --container-max-width: 1320px;
+  --transition-fast: 0.2s ease-in-out;
+  --transition-normal: 0.3s ease-in-out;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-pill: 9999px;
+}
+
+/* --------------------------------------------------------------------------
+   3. RESET & ESTILOS BASE RECOMENDADOS
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-family-base);
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--fs-parrafo-fluid);
+  font-weight: var(--font-weight-book);
+  line-height: var(--lh-body);
+  color: var(--color-text-dark);
+  background-color: var(--color-white);
+}
+
+/* --------------------------------------------------------------------------
+   4. CLASES DE UTILIDAD PARA TIPOGRAFÍA SEGÚN GUÍA
+   -------------------------------------------------------------------------- */
+/* Título de Portada: Gotham Black 96px */
+.titulo-portada {
+  font-family: var(--font-family-base);
+  font-size: var(--fs-titulo-portada-fluid);
+  font-weight: var(--font-weight-black);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.02em;
+}
+
+/* Título de Sección: Gotham Black 62px */
+.titulo-seccion {
+  font-family: var(--font-family-base);
+  font-size: var(--fs-titulo-seccion-fluid);
+  font-weight: var(--font-weight-black);
+  line-height: var(--lh-heading);
+  letter-spacing: -0.01em;
+}
+
+/* Subtítulo: Gotham Book 32px */
+.subtitulo {
+  font-family: var(--font-family-base);
+  font-size: var(--fs-subtitulo-fluid);
+  font-weight: var(--font-weight-book);
+  line-height: var(--lh-subheading);
+}
+
+/* Párrafo / Texto estándar: Gotham Book 24px */
+.parrafo {
+  font-family: var(--font-family-base);
+  font-size: var(--fs-parrafo-fluid);
+  font-weight: var(--font-weight-book);
+  line-height: var(--lh-body);
+}
+
+/* --------------------------------------------------------------------------
+   5. CLASES DE UTILIDAD PARA FONDOS Y COLORES DE TEXTO
+   -------------------------------------------------------------------------- */
+/* Fondos */
+.bg-header-footer { background-color: var(--color-header-footer); color: var(--color-text-light); }
+.bg-seccion       { background-color: var(--color-bg-seccion); color: var(--color-text-light); }
+.bg-nosotros      { background-color: var(--color-nosotros); color: var(--color-text-light); }
+.bg-drones        { background-color: var(--color-drones); color: var(--color-text-light); }
+.bg-whatsapp      { background-color: var(--color-whatsapp); color: var(--color-text-light); }
+
+/* Colores de texto */
+.text-header-footer { color: var(--color-header-footer); }
+.text-seccion       { color: var(--color-bg-seccion); }
+.text-nosotros      { color: var(--color-nosotros); }
+.text-drones        { color: var(--color-drones); }
+.text-whatsapp      { color: var(--color-whatsapp); }
+.text-white         { color: var(--color-white); }
