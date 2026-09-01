@@ -1,0 +1,386 @@
+/* ==========================================================================
+   SOLANUM - NOSOTROS PAGE SPECIFIC STYLES
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. HERO NOSOTROS (100% VH COMO EL HOME)
+   -------------------------------------------------------------------------- */
+.nosotros-hero {
+  position: relative;
+  min-height: calc(100vh - 72px);
+  height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+  background-image: url('../assets/nosotros/fondo.png');
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.nosotros-hero-eyebrow {
+  font-family: var(--font-family-base);
+  font-size: 1.15rem;
+  font-weight: var(--font-weight-book);
+  color: var(--color-white);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.nosotros-hero-title {
+  font-family: var(--font-family-base);
+  font-size: clamp(2.5rem, 5.5vw + 1rem, 5.5rem);
+  font-weight: var(--font-weight-black);
+  line-height: 1.05;
+  color: var(--color-white);
+  letter-spacing: -0.02em;
+}
+
+/* --------------------------------------------------------------------------
+   2. SPLIT SECTIONS (NUESTRA HISTORIA & CÓMO TRABAJAMOS)
+   -------------------------------------------------------------------------- */
+.nosotros-historia {
+  background-color: var(--color-tractores);
+  color: var(--color-white);
+  width: 100%;
+}
+
+.nosotros-trabajamos {
+  background-color: var(--color-white);
+  color: var(--color-text-dark);
+  width: 100%;
+}
+
+.nosotros-split-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  gap: 0;
+  min-height: 520px;
+}
+
+.split-col-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4.5rem 4rem 4.5rem 0;
+}
+
+.split-col-image {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+}
+
+.split-col-image img {
+  width: 100%;
+  height: 100%;
+  max-height: 560px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nosotros-split-grid:hover .split-col-image img {
+  transform: scale(1.03);
+}
+
+.split-eyebrow {
+  font-family: var(--font-family-base);
+  font-size: 1.15rem;
+  font-weight: var(--font-weight-book);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.nosotros-historia .split-eyebrow {
+  color: var(--color-white);
+}
+
+.nosotros-trabajamos .split-eyebrow {
+  color: var(--color-header-footer);
+  margin-bottom: 0.75rem;
+}
+
+.split-parrafo {
+  font-family: var(--font-family-base);
+  font-size: 1.15rem;
+  font-weight: var(--font-weight-book);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.split-parrafo:last-of-type {
+  margin-bottom: 0;
+}
+
+.nosotros-trabajamos .split-heading {
+  font-family: var(--font-family-base);
+  font-size: clamp(2rem, 3.5vw + 0.5rem, 3rem);
+  font-weight: var(--font-weight-black);
+  color: var(--color-text-dark);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.25rem;
+}
+
+.nosotros-trabajamos .split-parrafo {
+  color: var(--color-text-dark);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  margin-bottom: 2rem;
+}
+
+/* --------------------------------------------------------------------------
+   3. SECCIÓN: NUESTRO COMPROMISO
+   -------------------------------------------------------------------------- */
+.compromiso {
+  background-color: var(--color-nosotros);
+  color: var(--color-white);
+  padding: var(--spacing-3xl) 0;
+}
+
+.compromiso-eyebrow {
+  font-family: var(--font-family-base);
+  font-size: 1.15rem;
+  font-weight: var(--font-weight-book);
+  letter-spacing: 0.04em;
+  color: #000000;
+  margin-bottom: 0.6rem;
+  text-transform: uppercase;
+}
+
+.compromiso-titulo {
+  font-family: var(--font-family-base);
+  font-size: var(--fs-titulo-seccion-fluid);
+  font-weight: var(--font-weight-black);
+  color: var(--color-white);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  margin-bottom: 3.5rem;
+}
+
+.compromiso-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  align-items: stretch;
+}
+
+.compromiso-item {
+  padding: 0 1.5rem 0 2.75rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.compromiso-item:first-child {
+  padding-left: 0;
+  padding-right: 2.25rem;
+}
+
+.compromiso-item:last-child {
+  padding-right: 0;
+}
+
+.compromiso-item:not(:first-child)::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(44px + 0.85rem);
+  bottom: 0;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.65);
+}
+
+/* Iconos con color exacto #6E0F0D vía mask */
+.compromiso-icon {
+  width: 44px;
+  height: 44px;
+  background-color: var(--color-icon-compromiso, #6E0F0D);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+  display: block;
+  margin-bottom: 0.85rem;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.compromiso-icon.icon-persona {
+  -webkit-mask-image: url('../assets/iconos/persona.svg');
+  mask-image: url('../assets/iconos/persona.svg');
+}
+
+.compromiso-icon.icon-engranaje {
+  -webkit-mask-image: url('../assets/iconos/engranaje.svg');
+  mask-image: url('../assets/iconos/engranaje.svg');
+}
+
+.compromiso-icon.icon-barras {
+  -webkit-mask-image: url('../assets/iconos/barras.svg');
+  mask-image: url('../assets/iconos/barras.svg');
+}
+
+.compromiso-icon.icon-rayo {
+  -webkit-mask-image: url('../assets/iconos/rayo.svg');
+  mask-image: url('../assets/iconos/rayo.svg');
+}
+
+.compromiso-item:hover .compromiso-icon {
+  transform: translateY(-4px);
+}
+
+.compromiso-item-titulo {
+  font-family: var(--font-family-base);
+  font-size: 1.35rem;
+  font-weight: var(--font-weight-bold);
+  color: #000000;
+  margin-bottom: 0.85rem;
+  line-height: 1.15;
+}
+
+.compromiso-item-desc {
+  font-family: var(--font-family-base);
+  font-size: 0.95rem;
+  font-weight: var(--font-weight-book);
+  color: var(--color-white);
+  line-height: 1.4;
+  max-width: 172px;
+}
+
+/* --------------------------------------------------------------------------
+   4. SECCIÓN: NUESTRA MISIÓN
+   -------------------------------------------------------------------------- */
+.mision {
+  position: relative;
+  background-image: url('../assets/nosotros/fondonuestramision.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: var(--spacing-3xl) 0;
+  overflow: hidden;
+}
+
+.mision-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.mision-eyebrow {
+  font-family: var(--font-family-base);
+  font-size: 1.15rem;
+  font-weight: var(--font-weight-book);
+  letter-spacing: 0.04em;
+  color: var(--color-white);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+.mision-titulo {
+  font-family: var(--font-family-base);
+  font-size: clamp(2rem, 3.5vw + 0.5rem, 3.2rem);
+  font-weight: var(--font-weight-black);
+  color: var(--color-white);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  max-width: 750px;
+}
+
+.mision-desc {
+  font-family: var(--font-family-base);
+  font-size: 1.15rem;
+  font-weight: var(--font-weight-book);
+  color: var(--color-white);
+  line-height: 1.45;
+  max-width: 765px;
+  opacity: 0.95;
+}
+
+.mision-btn {
+  flex-shrink: 0;
+  margin-top: 0.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   MEDIA QUERIES (NOSOTROS)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .compromiso-grid {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: var(--spacing-2xl);
+    column-gap: 0;
+  }
+
+  .compromiso-item {
+    padding: 0 1.5rem;
+  }
+
+  .compromiso-item:nth-child(2n+1) {
+    padding-left: 0;
+  }
+
+  .compromiso-item:nth-child(2n+1)::before {
+    display: none;
+  }
+
+  .compromiso-item:nth-child(2n) {
+    padding-right: 0;
+  }
+
+  .split-col-text {
+    padding: 3.5rem 2rem 3.5rem 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .nosotros-split-grid {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .split-col-text {
+    padding: 3rem 0;
+  }
+
+  .split-col-image img {
+    max-height: 400px;
+  }
+
+  .mision-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mision-btn {
+    margin-top: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .compromiso-grid {
+    grid-template-columns: 1fr;
+    row-gap: var(--spacing-xl);
+  }
+
+  .compromiso-item {
+    padding: 0;
+  }
+
+  .compromiso-item::before {
+    display: none;
+  }
+
+  .nosotros-hero {
+    min-height: 500px;
+    text-align: center;
+  }
+}

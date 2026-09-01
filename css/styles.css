@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SOLANUM - MAIN STYLES (HOME)
+   SOLANUM - GLOBAL STYLES (HEADER, FOOTER, UTILITIES, ANIMATIONS)
    ========================================================================== */
 @import url('variables.css');
 
@@ -16,6 +16,7 @@
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
 .items-center { align-items: center; }
+.items-start { align-items: flex-start; }
 .justify-between { justify-content: space-between; }
 .justify-center { justify-content: center; }
 .gap-sm { gap: var(--spacing-sm); }
@@ -27,7 +28,7 @@
 .absolute { position: absolute; }
 .hidden { display: none; }
 
-/* Botones */
+/* Botones Globales */
 .btn-pill {
   display: inline-flex;
   align-items: center;
@@ -53,10 +54,12 @@
   font-size: var(--fs-boton);
   font-weight: var(--font-weight-medium);
 }
+
 .btn-wsp:hover {
-  background-color: #20b858; /* slightly darker green */
+  background-color: #20b858;
   transform: translateY(-2px);
 }
+
 .btn-wsp img {
   width: 20px;
   height: 20px;
@@ -89,10 +92,16 @@
   padding: 0.35rem 0.65rem;
   transition: var(--transition-fast);
   border-radius: var(--radius-pill);
+  border: 1px solid transparent;
 }
 
 .nav-link:hover {
   background-color: rgba(150, 0, 25, 0.1);
+}
+
+.nav-link.active {
+  border: 1px solid #1E1E1E;
+  color: #1E1E1E;
 }
 
 .logo-header {
@@ -102,432 +111,6 @@
 
 .logo-header:hover {
   transform: scale(1.04);
-}
-
-/* --------------------------------------------------------------------------
-   HERO / PORTADA
-   -------------------------------------------------------------------------- */
-.hero {
-  position: relative;
-  min-height: calc(100vh - 72px);
-  height: calc(100vh - 72px);
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-}
-
-.hero-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('../assets/home/portada.png');
-  background-size: cover;
-  background-position: center;
-  transform: scale(1.08);
-  animation: heroKenBurns 20s cubic-bezier(0.25, 1, 0.5, 1) infinite alternate;
-  will-change: transform;
-  z-index: 0;
-}
-
-.hero-overlay {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: linear-gradient(to right, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.15) 100%);
-  z-index: 1;
-}
-
-.hero .container {
-  position: relative;
-  z-index: 2;
-}
-
-.hero h1 {
-  max-width: 800px;
-  margin-bottom: var(--spacing-lg);
-  color: var(--color-white);
-}
-
-.hero-title {
-  animation: heroFadeInUp 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
-}
-
-.hero-btn {
-  animation: heroFadeInUp 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both, btnPulse 4.5s ease-in-out 2s infinite;
-}
-
-/* --------------------------------------------------------------------------
-   SECCIÓN: SOLUCIONES
-   -------------------------------------------------------------------------- */
-.soluciones {
-  padding: var(--spacing-3xl) 0;
-  background-color: var(--color-white);
-}
-
-.soluciones-header {
-  margin-bottom: var(--spacing-xl);
-}
-
-.soluciones-eyebrow {
-  color: var(--color-header-footer);
-  font-family: var(--font-family-base);
-  font-size: 1.35rem;
-  font-weight: var(--font-weight-medium);
-  letter-spacing: 0.03em;
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-}
-
-.soluciones-subtitulo {
-  font-family: var(--font-family-base);
-  font-size: var(--fs-subtitulo-fluid);
-  font-weight: var(--font-weight-book);
-  color: var(--color-text-dark);
-  line-height: var(--lh-subheading);
-}
-
-.soluciones-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
-}
-
-.solucion-card {
-  position: relative;
-  border-radius: 24px;
-  overflow: hidden;
-  aspect-ratio: 1 / 1.08;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 1.75rem 1.4rem;
-  text-decoration: none;
-  background-color: #111;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, box-shadow;
-}
-
-.solucion-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.22);
-}
-
-.solucion-card img.bg-card {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
-  z-index: 1;
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.solucion-card:hover img.bg-card {
-  transform: scale(1.08);
-}
-
-/* Gradiente limpio para mantener la parte superior iluminada y la inferior legible */
-.solucion-card::before {
-  content: '';
-  position: absolute;
-  top: 0; right: 0; bottom: 0; left: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.45) 40%, rgba(0,0,0,0.05) 70%, transparent 100%);
-  z-index: 2;
-}
-
-.solucion-content {
-  position: relative;
-  z-index: 3;
-  color: var(--color-white);
-}
-
-.solucion-titulo {
-  font-family: var(--font-family-base);
-  font-size: 1.85rem;
-  font-weight: var(--font-weight-black);
-  line-height: 1.1;
-  margin-bottom: 0.4rem;
-  color: var(--color-white);
-  letter-spacing: -0.01em;
-}
-
-.solucion-desc {
-  font-family: var(--font-family-base);
-  font-size: 0.95rem;
-  font-weight: var(--font-weight-book);
-  line-height: 1.35;
-  margin-bottom: 1.1rem;
-  color: var(--color-white);
-  opacity: 0.95;
-}
-
-.btn-ver-mas {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 145px;
-  height: 32px;
-  padding: 0 0.85rem;
-  border-radius: var(--radius-pill);
-  font-family: var(--font-family-base);
-  font-size: var(--fs-boton);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-white);
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.btn-arrow {
-  font-size: 1.25rem;
-  font-weight: 300;
-  line-height: 1;
-  display: inline-block;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.solucion-card:hover .btn-ver-mas {
-  filter: brightness(1.15);
-}
-
-.solucion-card:hover .btn-arrow {
-  transform: translateX(5px);
-}
-
-/* Colores específicos de cada botón según el orden solicitado (izq a der) */
-.card-agronomia .btn-ver-mas {
-  background-color: var(--color-agronomia); /* #682F13 */
-}
-
-.card-tractores .btn-ver-mas {
-  background-color: var(--color-tractores); /* #296D2B */
-}
-
-.card-drones .btn-ver-mas {
-  background-color: var(--color-drones);    /* #D35E15 */
-}
-
-.card-aplicacion .btn-ver-mas {
-  background-color: var(--color-aplicacion); /* #960019 */
-}
-
-
-/* --------------------------------------------------------------------------
-   SECCIÓN: CÓMO TRABAJAMOS
-   -------------------------------------------------------------------------- */
-.como-trabajamos {
-  background-color: var(--color-bg-seccion);
-  color: var(--color-white);
-  padding: var(--spacing-3xl) 0;
-}
-
-.trabajamos-eyebrow {
-  font-family: var(--font-family-base);
-  font-size: 1.15rem;
-  font-weight: var(--font-weight-book);
-  letter-spacing: 0.04em;
-  color: #000000; /* Negro como en la referencia */
-  margin-bottom: 0.6rem;
-  text-transform: uppercase;
-}
-
-.trabajamos-titulo {
-  font-family: var(--font-family-base);
-  font-size: var(--fs-titulo-seccion-fluid);
-  font-weight: var(--font-weight-black);
-  color: var(--color-white);
-  line-height: 1.08;
-  letter-spacing: -0.01em;
-  margin-bottom: 3.5rem;
-  max-width: 900px;
-}
-
-.trabajamos-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-}
-
-.trabajo-item {
-  padding: 0 2rem;
-  position: relative;
-}
-
-.trabajo-item:first-child {
-  padding-left: 0;
-}
-
-.trabajo-item:last-child {
-  padding-right: 0;
-}
-
-/* Línea divisoria gruesa (2px) y equidistante */
-.trabajo-item:not(:first-child)::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.25rem;
-  bottom: 0.25rem;
-  width: 2px;
-  background-color: rgba(255, 255, 255, 0.45);
-}
-
-.trabajo-icon {
-  height: 40px;
-  width: auto;
-  margin-bottom: 0.75rem; /* Espacio reducido entre icono y título */
-  display: block;
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.trabajo-item:hover .trabajo-icon {
-  transform: translateY(-4px);
-}
-
-.trabajo-titulo {
-  font-family: var(--font-family-base);
-  font-size: 1.35rem;
-  font-weight: var(--font-weight-bold);
-  color: #000000; /* TÍTULO DE PÁRRAFO EN NEGRO */
-  margin-bottom: 0.75rem;
-  line-height: 1.18;
-}
-
-.trabajo-desc {
-  font-family: var(--font-family-base);
-  font-size: 0.95rem;
-  font-weight: var(--font-weight-book);
-  color: var(--color-white);
-  opacity: 0.95;
-  line-height: 1.45;
-}
-
-/* --------------------------------------------------------------------------
-   SECCIÓN: MARCAS (CARRUSEL INFINITO)
-   -------------------------------------------------------------------------- */
-.marcas {
-  padding: var(--spacing-2xl) 0;
-  background-color: var(--color-white);
-  overflow: hidden; /* Oculta el scroll horizontal */
-}
-
-.marcas-header {
-  text-align: center;
-  margin-bottom: var(--spacing-xl);
-}
-
-.marcas-header h2 {
-  color: var(--color-header-footer);
-  font-size: 1.25rem;
-  font-weight: var(--font-weight-medium);
-  letter-spacing: 0.05em;
-}
-
-/* Contenedor principal del carrusel */
-.carousel-wrapper {
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-}
-
-/* Fading en los bordes para un efecto más limpio */
-.carousel-wrapper::before,
-.carousel-wrapper::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  width: 100px;
-  height: 100%;
-  z-index: 2;
-  pointer-events: none;
-}
-.carousel-wrapper::before {
-  left: 0;
-  background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
-}
-.carousel-wrapper::after {
-  right: 0;
-  background: linear-gradient(to left, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
-}
-
-.carousel-track {
-  display: flex;
-  align-items: center;
-  gap: 6rem; /* Espacio entre logos */
-  padding-right: 6rem; /* Para que el loop sea fluido */
-  /* El ancho dependerá de los elementos, pero para la animación infinita
-     usamos una animación que mueve el track hacia la izquierda. */
-  width: max-content;
-  animation: scroll-marcas 50s linear infinite; /* Desacelerado / suave */
-}
-
-.carousel-track:hover {
-  animation-play-state: paused; /* Pausa al pasar el mouse */
-}
-
-.carousel-track img {
-  height: 60px; /* Tamaño consistente para los logos SVG */
-  width: auto;
-  max-width: 180px;
-  object-fit: contain;
-  filter: grayscale(100%) opacity(0.7); /* Estilo de logo secundario */
-  transition: filter 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.carousel-track img:hover {
-  filter: grayscale(0%) opacity(1); /* Logo a color al hover */
-  transform: scale(1.06);
-}
-
-@keyframes scroll-marcas {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(calc(-50%)); } 
-  /* Nota: en HTML duplicaremos los elementos para que el -50% sea un loop perfecto */
-}
-
-
-/* --------------------------------------------------------------------------
-   SECCIÓN: CTA (CONTACTO)
-   -------------------------------------------------------------------------- */
-.cta-contacto {
-  position: relative;
-  padding: var(--spacing-3xl) 0;
-  background-image: url('../assets/home/contactanos/texturafondo.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.cta-contacto .container {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.cta-text {
-  color: var(--color-white);
-}
-
-.cta-text h2 {
-  font-size: 3rem;
-  font-family: var(--font-family-base);
-  font-weight: var(--font-weight-black);
-  margin-bottom: var(--spacing-xs);
-  line-height: var(--lh-tight);
-}
-
-.cta-text p {
-  font-size: 1.25rem;
-  font-weight: var(--font-weight-medium);
 }
 
 /* --------------------------------------------------------------------------
@@ -655,29 +238,13 @@
 }
 
 /* --------------------------------------------------------------------------
-   MEDIA QUERIES (RESPONSIVE)
+   MEDIA QUERIES GLOBALES (HEADER / FOOTER)
    -------------------------------------------------------------------------- */
 @media (max-width: 1024px) {
-  .soluciones-grid { grid-template-columns: repeat(2, 1fr); }
-  .trabajamos-grid { grid-template-columns: repeat(2, 1fr); row-gap: var(--spacing-2xl); column-gap: 0; }
-  .trabajo-item { padding: 0 1.5rem; }
-  .trabajo-item:nth-child(2n+1) { padding-left: 0; }
-  .trabajo-item:nth-child(2n+1)::before { display: none; }
-  .trabajo-item:nth-child(2n) { padding-right: 0; }
   .footer-grid { grid-template-columns: repeat(2, 1fr); gap: var(--spacing-xl); }
 }
 
 @media (max-width: 768px) {
-  .cta-contacto .container { flex-direction: column; text-align: center; gap: var(--spacing-lg); }
   .nav-menu { display: none; }
   .footer-grid { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 640px) {
-  .soluciones-grid { grid-template-columns: 1fr; }
-  .trabajamos-grid { grid-template-columns: 1fr; row-gap: var(--spacing-xl); }
-  .trabajo-item { padding: 0; }
-  .trabajo-item::before { display: none; } /* Quitar todas las lineas en mobile */
-  .hero { min-height: 500px; text-align: center; }
-  .cta-text h2 { font-size: 2rem; }
 }

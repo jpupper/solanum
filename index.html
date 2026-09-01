@@ -7,23 +7,13 @@
   <title>Solanum - Agronomía, tractores y drones</title>
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/home.css">
 </head>
 
-<body>
+<body data-page="home">
 
-  <!-- HEADER -->
-  <header class="header">
-    <div class="container flex justify-between items-center">
-      <a href="#">
-        <img src="assets/header/logoheader.png" alt="Solanum Logo" class="logo-header">
-      </a>
-      <nav class="nav-menu flex gap-sm">
-        <a href="#" class="nav-link">Nosotros</a>
-        <a href="#" class="nav-link">Soluciones</a>
-        <a href="#" class="nav-link">Contacto</a>
-      </nav>
-    </div>
-  </header>
+  <!-- HEADER (Dinamico via JS) -->
+  <header class="header"></header>
 
   <!-- HERO / PORTADA -->
   <section class="hero">
@@ -39,7 +29,7 @@
   </section>
 
   <!-- SOLUCIONES -->
-  <section class="soluciones">
+  <section class="soluciones" id="soluciones">
     <div class="container">
       <div class="soluciones-header reveal">
         <h2 class="soluciones-eyebrow">NUESTRAS SOLUCIONES</h2>
@@ -178,7 +168,7 @@
   </section>
 
   <!-- CTA / CONTACTO -->
-  <section class="cta-contacto">
+  <section class="cta-contacto" id="contacto">
     <div class="container">
       <div class="cta-text reveal">
         <h2>¿Querés potenciar<br>tu producción?</h2>
@@ -191,40 +181,8 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="container footer-grid">
-      <div class="footer-col">
-        <img src="assets/header/logoheader.png" alt="Solanum Logo" class="logo-footer">
-        <p class="logo-tagline">Agronomía, tractores y drones</p>
-      </div>
-
-      <div class="footer-col">
-        <h4>ENLACE</h4>
-        <a href="#">Inicio</a>
-        <a href="#">Nosotros</a>
-        <a href="#">Soluciones</a>
-        <a href="#">Contacto</a>
-      </div>
-
-      <div class="footer-col">
-        <h4>CONTACTO</h4>
-        <p>Av. Paula Albarracín<br>
-          de Sarmiento, San Juan<br>
-          0264 456-5402<br>
-          info@solanum.com.ar</p>
-      </div>
-
-      <div class="footer-col">
-        <h4>SEGUINOS</h4>
-        <div class="social-links">
-          <a href="#"><img src="assets/footer/ig.png" alt="Instagram"></a>
-          <a href="#"><img src="assets/footer/youtube.png" alt="YouTube"></a>
-          <a href="#"><img src="assets/footer/linkedin.png" alt="LinkedIn"></a>
-        </div>
-      </div>
-    </div>
-  </footer>
+  <!-- FOOTER (Dinamico via JS) -->
+  <footer class="footer"></footer>
 
   <!-- JS Scripts -->
   <script src="js/main.js"></script>
