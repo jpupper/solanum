@@ -1,0 +1,236 @@
+/* ==========================================================================
+   SOLANUM - CONTACTO PAGE SPECIFIC STYLES
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. HERO CONTACTO (100% VH COMO EL HOME)
+   -------------------------------------------------------------------------- */
+.contacto-hero {
+  position: relative;
+  min-height: calc(100vh - 72px);
+  height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+  background-image: url('../assets/contacto/fondo.png');
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.contacto-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.15) 100%);
+  z-index: 1;
+}
+
+.contacto-hero .container {
+  position: relative;
+  z-index: 2;
+}
+
+.contacto-hero-title {
+  font-family: var(--font-family-base);
+  font-size: clamp(2.5rem, 5.5vw + 1rem, 5.5rem);
+  font-weight: var(--font-weight-black);
+  line-height: 1.05;
+  color: var(--color-white);
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+}
+
+.contacto-hero-desc {
+  font-family: var(--font-family-base);
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-book);
+  color: var(--color-white);
+  line-height: 1.45;
+  margin-bottom: 2rem;
+  opacity: 0.95;
+  max-width: 600px;
+}
+
+/* --------------------------------------------------------------------------
+   2. SECCIÓN: TAMBIÉN PODÉS VISITARNOS
+   -------------------------------------------------------------------------- */
+.contacto-info {
+  background-color: var(--color-white);
+  padding: var(--spacing-3xl) 0;
+}
+
+.contacto-info-titulo {
+  font-family: var(--font-family-base);
+  font-size: clamp(2rem, 3.5vw + 0.5rem, 3rem);
+  font-weight: var(--font-weight-black);
+  color: var(--color-text-dark);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: 3.5rem;
+}
+
+.contacto-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  align-items: stretch;
+}
+
+.contacto-item {
+  padding: 0 1.5rem 0 2.75rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.contacto-item:first-child {
+  padding-left: 0;
+  padding-right: 2.25rem;
+}
+
+.contacto-item:last-child {
+  padding-right: 0;
+}
+
+.contacto-item:not(:first-child)::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(44px + 0.85rem);
+  bottom: 0;
+  width: 1px;
+  background-color: rgba(150, 0, 25, 0.4);
+}
+
+/* Iconos de Contacto (Color #960019) */
+.contacto-icon {
+  width: 44px;
+  height: 44px;
+  background-color: var(--color-header-footer);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+  display: block;
+  margin-bottom: 0.85rem;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contacto-icon.icon-persona {
+  -webkit-mask-image: url('../assets/iconos/persona.svg');
+  mask-image: url('../assets/iconos/persona.svg');
+}
+
+.contacto-icon.icon-engranaje {
+  -webkit-mask-image: url('../assets/iconos/engranaje.svg');
+  mask-image: url('../assets/iconos/engranaje.svg');
+}
+
+.contacto-icon.icon-barras {
+  -webkit-mask-image: url('../assets/iconos/barras.svg');
+  mask-image: url('../assets/iconos/barras.svg');
+}
+
+.contacto-item:hover .contacto-icon {
+  transform: translateY(-4px);
+}
+
+.contacto-item-titulo {
+  font-family: var(--font-family-base);
+  font-size: 1.35rem;
+  font-weight: var(--font-weight-bold);
+  color: #000000;
+  margin-bottom: 0.85rem;
+  line-height: 1.15;
+}
+
+.contacto-item-desc {
+  font-family: var(--font-family-base);
+  font-size: 0.95rem;
+  font-weight: var(--font-weight-book);
+  color: var(--color-header-footer);
+  line-height: 1.45;
+}
+
+.contacto-item-desc a {
+  color: var(--color-header-footer);
+  text-decoration: none;
+  display: block;
+  transition: opacity 0.25s ease;
+}
+
+.contacto-item-desc a:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+/* --------------------------------------------------------------------------
+   3. SECCIÓN: MAPA
+   -------------------------------------------------------------------------- */
+.contacto-mapa {
+  width: 100%;
+  height: 440px;
+  overflow: hidden;
+  position: relative;
+  background-color: #e5e3df;
+}
+
+.contacto-mapa iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   MEDIA QUERIES (CONTACTO)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .contacto-grid {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: var(--spacing-2xl);
+    column-gap: 0;
+  }
+  .contacto-item {
+    padding: 0 1.5rem;
+  }
+  .contacto-item:nth-child(2n+1) {
+    padding-left: 0;
+  }
+  .contacto-item:nth-child(2n+1)::before {
+    display: none;
+  }
+  .contacto-item:nth-child(2n) {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .contacto-mapa {
+    height: 360px;
+  }
+}
+
+@media (max-width: 640px) {
+  .contacto-grid {
+    grid-template-columns: 1fr;
+    row-gap: var(--spacing-xl);
+  }
+  .contacto-item {
+    padding: 0;
+  }
+  .contacto-item::before {
+    display: none;
+  }
+  .contacto-hero {
+    min-height: 500px;
+    text-align: center;
+  }
+  .contacto-hero-desc {
+    margin: 0 auto 2rem;
+  }
+}
