@@ -1,0 +1,171 @@
+/* Aplicaciones CSS */
+.aplicaciones-hero {
+  position: relative;
+  min-height: calc(100vh - 72px);
+  height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+  background-image: url('../assets/aplicaciones/fondo.png');
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 100%);
+  z-index: 1;
+}
+
+.relative { position: relative; z-index: 2; }
+
+.hero-eyebrow {
+  color: var(--color-white);
+  font-family: var(--font-family-base);
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.hero-title-row {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.hero-title {
+  color: var(--color-white);
+  font-family: var(--font-family-base);
+  font-size: clamp(3rem, 5vw, 5.5rem);
+  font-weight: var(--font-weight-black);
+  line-height: 1.1;
+}
+
+.btn-video {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 155px;
+  height: 32px;
+  padding: 0 0.85rem;
+  background-color: var(--color-white);
+  color: var(--color-header-footer);
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  font-family: var(--font-family-base);
+  font-size: var(--fs-boton);
+  font-weight: var(--font-weight-medium);
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-video:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.hero-desc {
+  color: var(--color-white);
+  font-family: var(--font-family-base);
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-medium);
+  line-height: 1.5;
+  max-width: 600px;
+}
+
+.mt-4 { margin-top: 1.5rem; }
+
+/* Beneficios Section */
+.beneficios-section {
+  background-color: #F4F4F4;
+  padding: 5rem 0;
+}
+
+.beneficios-title {
+  font-family: var(--font-family-base);
+  font-size: 2.5rem;
+  font-weight: var(--font-weight-black);
+  color: #111;
+  margin-bottom: 1rem;
+}
+
+.beneficios-subtitle {
+  font-family: var(--font-family-base);
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 4rem;
+  line-height: 1.5;
+}
+
+.beneficios-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.beneficio-card {
+  border-left: 1px solid rgba(150,0,25,0.3);
+  padding-left: 1.5rem;
+}
+
+.beneficio-card:first-child {
+  border-left: none;
+  padding-left: 0;
+}
+
+.beneficio-icon {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 1.5rem;
+}
+
+.beneficio-card h3 {
+  font-family: var(--font-family-base);
+  font-size: 1.3rem;
+  font-weight: var(--font-weight-bold);
+  color: #111;
+  margin-bottom: 0.5rem;
+}
+
+.beneficio-card p {
+  font-family: var(--font-family-base);
+  font-size: 0.95rem;
+  color: var(--color-header-footer);
+  line-height: 1.4;
+}
+
+/* CTA */
+.cta-section {
+  position: relative;
+  background-image: url('../assets/aplicaciones/fondocard.png');
+  background-size: cover;
+  background-position: center;
+  padding: 5rem 0;
+}
+
+.cta-title {
+  color: var(--color-white);
+  font-family: var(--font-family-base);
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-weight: var(--font-weight-black);
+  margin-bottom: 1rem;
+  line-height: 1.1;
+}
+
+.cta-desc {
+  color: var(--color-white);
+  font-family: var(--font-family-base);
+  font-size: 1.25rem;
+  line-height: 1.5;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .beneficios-grid { grid-template-columns: repeat(2, 1fr); gap: 3rem; }
+  .beneficio-card { border-left: none; padding-left: 0; }
+  .hero-title-row { flex-direction: column; align-items: flex-start; gap: 1rem; }
+}

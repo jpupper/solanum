@@ -18,7 +18,7 @@ function renderHeader() {
       </a>
       <nav class="nav-menu flex gap-sm" aria-label="Navegación principal">
         <a href="nosotros.html" class="nav-link ${isNosotros ? 'active' : ''}">Nosotros</a>
-        <a href="index.html#soluciones" class="nav-link ${isSoluciones ? 'active' : ''}">Soluciones</a>
+        <a href="soluciones.html" class="nav-link ${isSoluciones ? 'active' : ''}">Soluciones</a>
         <a href="contacto.html" class="nav-link ${isContacto ? 'active' : ''}">Contacto</a>
       </nav>
     </div>
@@ -42,7 +42,7 @@ function renderFooter() {
         <h4>ENLACE</h4>
         <a href="index.html">Inicio</a>
         <a href="nosotros.html">Nosotros</a>
-        <a href="index.html#soluciones">Soluciones</a>
+        <a href="soluciones.html">Soluciones</a>
         <a href="contacto.html">Contacto</a>
       </div>
 

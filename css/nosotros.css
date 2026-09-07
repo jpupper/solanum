@@ -110,6 +110,7 @@
   font-size: 1.15rem;
   font-weight: var(--font-weight-book);
   line-height: 1.5;
+  padding-right: 15%;
   margin-bottom: 1.5rem;
 }
 
@@ -200,7 +201,7 @@
 .compromiso-icon {
   width: 44px;
   height: 44px;
-  background-color: var(--color-icon-compromiso, #6E0F0D);
+  background-color: white;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   -webkit-mask-size: contain;
@@ -240,7 +241,6 @@
   font-family: var(--font-family-base);
   font-size: 1.35rem;
   font-weight: var(--font-weight-bold);
-  color: #000000;
   margin-bottom: 0.85rem;
   line-height: 1.15;
 }

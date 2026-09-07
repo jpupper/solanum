@@ -1,0 +1,301 @@
+/* Insumos CSS */
+.insumos-hero {
+  position: relative;
+  min-height: calc(100vh - 72px);
+  height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+  background-image: url('../assets/insumos/fondo.png');
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.1) 100%);
+  z-index: 1;
+}
+
+.relative {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-eyebrow {
+  color: var(--color-white);
+  font-family: var(--font-family-base);
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.hero-title {
+  color: var(--color-white);
+  font-family: var(--font-family-base);
+  font-size: clamp(3rem, 5vw, 5.5rem);
+  font-weight: var(--font-weight-black);
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+
+.mt-4 {
+  margin-top: 1.5rem;
+}
+
+.mt-5 {
+  margin-top: 4rem;
+}
+
+/* Que Encontras Section */
+.que-encontras {
+  padding: 4rem 0 0 0;
+  background-color: #fff;
+}
+
+.section-title {
+  font-family: var(--font-family-base);
+  font-size: clamp(2rem, 3.5vw + 0.5rem, 3rem);
+  font-weight: var(--font-weight-black);
+  color: #111;
+  margin-bottom: 1.5rem;
+}
+
+.section-desc {
+  font-family: var(--font-family-base);
+  font-size: 1.15rem;
+  color: #333;
+  max-width: 700px;
+  line-height: 1.5;
+}
+
+.linea-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  gap: 0;
+  min-height: 520px;
+}
+
+.linea-row.row-reverse {
+  grid-template-columns: 1fr 1fr;
+}
+
+.linea-row.row-reverse .linea-img-col {
+  order: 2;
+}
+
+.linea-img-col {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+}
+
+.linea-img-col img {
+  width: 100%;
+  height: 100%;
+  max-height: 560px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 0;
+  display: block;
+}
+
+.linea-text-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4.5rem 4rem 4.5rem 10%;
+  background-color: #F1F1F1;
+}
+
+.linea-row.row-reverse .linea-text-col {
+  order: 1;
+  padding: 4.5rem 0 4.5rem 4rem;
+}
+
+.color-insumo {
+  color: #8A3E25;
+}
+
+.linea-text-col h3 {
+  font-family: var(--font-family-base);
+  font-size: clamp(2rem, 3.5vw + 0.5rem, 2.5rem);
+  font-weight: var(--font-weight-black);
+  margin-bottom: 1rem;
+  line-height: 1.1;
+}
+
+.linea-text-col p {
+  font-family: var(--font-family-base);
+  font-size: 1.15rem;
+  color: #333;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  padding-right: 15%;
+}
+
+.linea-text-col ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+
+.linea-text-col ul li {
+  font-family: var(--font-family-base);
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+/* Marcas Section */
+.marcas-insumos {
+  padding: 4rem 0;
+  background-color: #fff;
+}
+
+.marcas-title {
+  font-family: var(--font-family-base);
+  font-size: 2rem;
+  font-weight: var(--font-weight-black);
+  margin-bottom: 1rem;
+}
+
+.marcas-desc {
+  font-family: var(--font-family-base);
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.carousel-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  padding: 1.5rem 0;
+}
+
+.carousel-wrapper::before,
+.carousel-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 120px;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.carousel-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.carousel-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.carousel-track {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  padding-right: 4rem;
+  width: max-content;
+  animation: scrollCarousel 40s linear infinite;
+}
+
+.carousel-track:hover {
+  animation-play-state: paused;
+}
+
+.carousel-track img {
+  height: 50px;
+  width: auto;
+  max-width: 160px;
+  object-fit: contain;
+  filter: grayscale(100%) opacity(0.7);
+  transition: filter 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.carousel-track img:hover {
+  filter: grayscale(0%) opacity(1);
+  transform: scale(1.05);
+}
+
+@keyframes scrollCarousel {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* CTA */
+.cta-section {
+  position: relative;
+  background-image: url('../assets/insumos/fondocard.png');
+  background-size: cover;
+  background-position: center;
+  padding: 4rem 0;
+}
+
+.cta-eyebrow {
+  color: var(--color-white);
+  font-family: var(--font-family-base);
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.cta-title {
+  color: var(--color-white);
+  font-family: var(--font-family-base);
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-weight: var(--font-weight-black);
+  margin-bottom: 0.5rem;
+}
+
+.cta-desc {
+  color: var(--color-white);
+  font-family: var(--font-family-base);
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 1024px) {
+
+  .linea-row,
+  .linea-row.row-reverse {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .linea-row.row-reverse .linea-img-col {
+    order: 1;
+  }
+
+  .linea-row.row-reverse .linea-text-col {
+    order: 2;
+    padding: 3rem 2rem;
+  }
+
+  .linea-text-col {
+    padding: 3rem 2rem;
+  }
+
+  .linea-text-col p {
+    padding-right: 0;
+  }
+}

@@ -104,35 +104,13 @@
   background-color: rgba(150, 0, 25, 0.4);
 }
 
-/* Iconos de Contacto (Color #960019) */
+/* Iconos de Contacto */
 .contacto-icon {
   width: 44px;
   height: 44px;
-  background-color: var(--color-header-footer);
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-position: left center;
-  mask-position: left center;
   display: block;
   margin-bottom: 0.85rem;
   transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.contacto-icon.icon-persona {
-  -webkit-mask-image: url('../assets/iconos/persona.svg');
-  mask-image: url('../assets/iconos/persona.svg');
-}
-
-.contacto-icon.icon-engranaje {
-  -webkit-mask-image: url('../assets/iconos/engranaje.svg');
-  mask-image: url('../assets/iconos/engranaje.svg');
-}
-
-.contacto-icon.icon-barras {
-  -webkit-mask-image: url('../assets/iconos/barras.svg');
-  mask-image: url('../assets/iconos/barras.svg');
 }
 
 .contacto-item:hover .contacto-icon {
