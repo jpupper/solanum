@@ -200,6 +200,22 @@ function setupDroneOnCanvas(canvas, section) {
   let autoHoverTimer = null;
   let charItems = [];
 
+  // Detección si la sección tiene fondo claro (o es aplicaciones.html) para pintar el dron negro
+  const isDarkSection = (
+    document.body.getAttribute("data-page") === "aplicaciones" ||
+    window.location.href.includes("aplicaciones") ||
+    section.classList.contains("beneficios-section") ||
+    (() => {
+      const bg = window.getComputedStyle(section).backgroundColor;
+      const m = bg.match(/\d+/g);
+      if (m && m.length >= 3) {
+        const lum = 0.299 * (+m[0]) + 0.587 * (+m[1]) + 0.114 * (+m[2]);
+        return lum > 180;
+      }
+      return false;
+    })()
+  );
+
   // Estado del Dron
   const drone = {
     x: -150,
@@ -214,7 +230,8 @@ function setupDroneOnCanvas(canvas, section) {
     isPressed: false,
     exitVx: 0,
     exitVy: 0,
-    scale: 0.95
+    scale: 0.95,
+    isDark: isDarkSection
   };
 
   // Preparar todas las letras de los textos en la sección para el efecto de viento
@@ -653,7 +670,8 @@ function setupDroneOnCanvas(canvas, section) {
         drone.tilt + windTilt,
         drone.propAngle,
         windBobY,
-        drone.scale
+        drone.scale,
+        drone.isDark
       );
     }
 
@@ -687,7 +705,7 @@ function setupDroneOnCanvas(canvas, section) {
  * - Sensores frontales anticolisión y cámara gimbal 4K
  * - 4 hélices con rotación de alta velocidad, discos de sustentación y sombra
  */
-function drawDrone(ctx, x, y, tilt, propAngle, bobY, scale) {
+function drawDrone(ctx, x, y, tilt, propAngle, bobY, scale, isDark = false) {
   ctx.save();
   ctx.translate(x, y);
   ctx.scale(scale, scale);
@@ -698,7 +716,7 @@ function drawDrone(ctx, x, y, tilt, propAngle, bobY, scale) {
   ctx.save();
   ctx.beginPath();
   ctx.ellipse(0, groundY, 28 * shadowScale, 9 * shadowScale, 0, 0, Math.PI * 2);
-  ctx.fillStyle = "rgba(0, 0, 0, 0.23)";
+  ctx.fillStyle = isDark ? "rgba(0, 0, 0, 0.28)" : "rgba(0, 0, 0, 0.23)";
   ctx.fill();
   ctx.restore();
 
@@ -709,13 +727,13 @@ function drawDrone(ctx, x, y, tilt, propAngle, bobY, scale) {
   const armY = 16;
 
   // Sombra del chasis para gran contraste tanto en fondos claros como oscuros
-  ctx.shadowColor = "rgba(0, 0, 0, 0.28)";
+  ctx.shadowColor = isDark ? "rgba(0, 0, 0, 0.35)" : "rgba(0, 0, 0, 0.28)";
   ctx.shadowBlur = 6;
   ctx.shadowOffsetY = 2;
 
-  // 3. Brazos estructurales tubulares blancos
+  // 3. Brazos estructurales tubulares (negro en fondos claros / blanco en fondos oscuros)
   ctx.lineWidth = 4;
-  ctx.strokeStyle = "#ffffff";
+  ctx.strokeStyle = isDark ? "#111111" : "#ffffff";
   ctx.lineCap = "round";
 
   ctx.beginPath();
@@ -725,9 +743,9 @@ function drawDrone(ctx, x, y, tilt, propAngle, bobY, scale) {
   ctx.lineTo(-armX, armY);
   ctx.stroke();
 
-  // Refuerzo interno gris de fibra de carbono
+  // Refuerzo interno
   ctx.lineWidth = 1.2;
-  ctx.strokeStyle = "#94a3b8";
+  ctx.strokeStyle = isDark ? "#27272a" : "#94a3b8";
   ctx.beginPath();
   ctx.moveTo(-armX * 0.85, -armY * 0.85);
   ctx.lineTo(armX * 0.85, armY * 0.85);
@@ -737,7 +755,7 @@ function drawDrone(ctx, x, y, tilt, propAngle, bobY, scale) {
 
   // 4. Patas de aterrizaje inferiores (skids)
   ctx.lineWidth = 2;
-  ctx.strokeStyle = "#cbd5e1";
+  ctx.strokeStyle = isDark ? "#27272a" : "#cbd5e1";
   ctx.beginPath();
   ctx.moveTo(-13, -15);
   ctx.lineTo(-13, 15);
@@ -745,9 +763,8 @@ function drawDrone(ctx, x, y, tilt, propAngle, bobY, scale) {
   ctx.lineTo(13, 15);
   ctx.stroke();
 
-  // 5. CHASIS CENTRAL REALISTA (Esculpido geométrico / aerodinámico - sin óvalo simple)
-  // Fuselaje angular multicapa estilo DJI Enterprise
-  ctx.fillStyle = "#ffffff";
+  // 5. CHASIS CENTRAL REALISTA (Fuselaje angular multicapa estilo DJI Enterprise)
+  ctx.fillStyle = isDark ? "#111111" : "#ffffff";
   ctx.beginPath();
   ctx.moveTo(-7, -17);  // Morro frontal izquierdo
   ctx.lineTo(7, -17);   // Morro frontal derecho
@@ -761,33 +778,33 @@ function drawDrone(ctx, x, y, tilt, propAngle, bobY, scale) {
   ctx.fill();
 
   // Bisel perimetral y relieve de carcasa
-  ctx.strokeStyle = "#e2e8f0";
+  ctx.strokeStyle = isDark ? "#27272a" : "#e2e8f0";
   ctx.lineWidth = 1.2;
   ctx.stroke();
 
   // Módulo de batería inteligente trasero con ranura
-  ctx.fillStyle = "#f1f5f9";
+  ctx.fillStyle = isDark ? "#18181b" : "#f1f5f9";
   ctx.beginPath();
   ctx.rect(-6, 4, 12, 11);
   ctx.fill();
-  ctx.strokeStyle = "#cbd5e1";
+  ctx.strokeStyle = isDark ? "#27272a" : "#cbd5e1";
   ctx.lineWidth = 0.8;
   ctx.stroke();
 
   // 4 LEDs verdes de carga de batería DJI
   for (let i = 0; i < 4; i++) {
-    ctx.fillStyle = "#22c55e";
+    ctx.fillStyle = isDark ? "#4ade80" : "#22c55e";
     ctx.beginPath();
     ctx.arc(-3.6 + i * 2.4, 12.5, 0.75, 0, Math.PI * 2);
     ctx.fill();
   }
 
   // Cúpula superior de antena RTK/GNSS de alta precisión
-  ctx.fillStyle = "#ffffff";
+  ctx.fillStyle = isDark ? "#18181b" : "#ffffff";
   ctx.beginPath();
   ctx.arc(0, -1, 5.5, 0, Math.PI * 2);
   ctx.fill();
-  ctx.strokeStyle = "#cbd5e1";
+  ctx.strokeStyle = isDark ? "#27272a" : "#cbd5e1";
   ctx.lineWidth = 1;
   ctx.stroke();
 
@@ -799,14 +816,14 @@ function drawDrone(ctx, x, y, tilt, propAngle, bobY, scale) {
   ctx.fill();
 
   // Sensores frontales anticolisión estereoscópicos
-  ctx.fillStyle = "#0f172a";
+  ctx.fillStyle = "#09090b";
   ctx.beginPath();
   ctx.arc(-4.5, -16.5, 1.2, 0, Math.PI * 2);
   ctx.arc(4.5, -16.5, 1.2, 0, Math.PI * 2);
   ctx.fill();
 
   // Cámara / Gimbal frontal 4K
-  ctx.fillStyle = "#0f172a";
+  ctx.fillStyle = "#09090b";
   ctx.beginPath();
   ctx.rect(-3.5, -19.5, 7, 3.5);
   ctx.fill();
@@ -831,12 +848,12 @@ function drawDrone(ctx, x, y, tilt, propAngle, bobY, scale) {
 
   motors.forEach((m, idx) => {
     // Cabezal del motor
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = isDark ? "#18181b" : "#ffffff";
     ctx.beginPath();
     ctx.arc(m.x, m.y, 4.5, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.strokeStyle = "#cbd5e1";
+    ctx.strokeStyle = isDark ? "#27272a" : "#cbd5e1";
     ctx.lineWidth = 1;
     ctx.stroke();
 
@@ -847,12 +864,12 @@ function drawDrone(ctx, x, y, tilt, propAngle, bobY, scale) {
     ctx.fill();
 
     // Disco de sustentación por giro rápido del rotor (blur)
-    ctx.fillStyle = "rgba(255, 255, 255, 0.28)";
+    ctx.fillStyle = isDark ? "rgba(0, 0, 0, 0.16)" : "rgba(255, 255, 255, 0.28)";
     ctx.beginPath();
     ctx.ellipse(m.x, m.y, rotorRadius, rotorRadius * 0.65, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.45)";
+    ctx.strokeStyle = isDark ? "rgba(0, 0, 0, 0.25)" : "rgba(255, 255, 255, 0.45)";
     ctx.lineWidth = 0.8;
     ctx.stroke();
 
@@ -861,15 +878,15 @@ function drawDrone(ctx, x, y, tilt, propAngle, bobY, scale) {
     ctx.translate(m.x, m.y);
     ctx.rotate(propAngle * m.dir + (idx * Math.PI / 4));
 
-    // Palas en blanco puro
-    ctx.fillStyle = "#ffffff";
+    // Palas en negro (en fondos claros) o blanco (en fondos oscuros)
+    ctx.fillStyle = isDark ? "#111111" : "#ffffff";
     ctx.beginPath();
     ctx.ellipse(-rotorRadius * 0.5, 0, rotorRadius * 0.52, 2, 0, 0, Math.PI * 2);
     ctx.ellipse(rotorRadius * 0.5, 0, rotorRadius * 0.52, 2, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Puntas oscuras aerodinámicas
-    ctx.fillStyle = "rgba(30, 41, 59, 0.8)";
+    // Puntas aerodinámicas
+    ctx.fillStyle = isDark ? "#3f3f46" : "rgba(30, 41, 59, 0.8)";
     ctx.beginPath();
     ctx.arc(-rotorRadius * 0.9, 0, 1.4, 0, Math.PI * 2);
     ctx.arc(rotorRadius * 0.9, 0, 1.4, 0, Math.PI * 2);
