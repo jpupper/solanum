@@ -93,4 +93,50 @@ document.addEventListener("DOMContentLoaded", () => {
   renderHeader();
   renderFooter();
   initScrollAnimations();
+  initYouTubeBackgrounds();
 });
+
+/* YT Loop Fix */
+function initYouTubeBackgrounds() {
+  const iframes = document.querySelectorAll('iframe[src*="youtube.com"]');
+  if (iframes.length === 0) return;
+
+  iframes.forEach(iframe => {
+    if (!iframe.src.includes('enablejsapi=1')) {
+      iframe.src += '&enablejsapi=1';
+    }
+  });
+
+  const tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  const firstScriptTag = document.getElementsByTagName('script')[0];
+  if (firstScriptTag) {
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  } else {
+    document.head.appendChild(tag);
+  }
+
+  window.onYouTubeIframeAPIReady = function() {
+    iframes.forEach(iframe => {
+      let interval;
+      new YT.Player(iframe, {
+        events: {
+          'onStateChange': function(event) {
+            if (event.data === YT.PlayerState.PLAYING) {
+              if (interval) clearInterval(interval);
+              interval = setInterval(() => {
+                const duration = event.target.getDuration();
+                const currentTime = event.target.getCurrentTime();
+                if (duration > 0 && duration - currentTime < 0.3) {
+                  event.target.seekTo(0);
+                }
+              }, 100);
+            } else {
+              if (interval) clearInterval(interval);
+            }
+          }
+        }
+      });
+    });
+  }
+}

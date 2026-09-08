@@ -8,7 +8,7 @@
   height: calc(100vh - 72px);
   display: flex;
   align-items: center;
-  background-image: url('../assets/soluciones/fondo.png');
+  /* background-image: url('../assets/soluciones/fondo.png'); */
   background-size: cover;
   background-position: center;
   overflow: hidden;

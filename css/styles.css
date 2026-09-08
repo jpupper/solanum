@@ -28,6 +28,62 @@
 .absolute { position: absolute; }
 .hidden { display: none; }
 
+/* Contenedores de Video Globales */
+.video-bg-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.video-bg-container iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 56.25vw; /* 16:9 Aspect Ratio */
+  min-height: 100vh;
+  min-width: 177.77vh; /* 16:9 Aspect Ratio */
+  transform: translate(-50%, -50%);
+}
+
+.video-inline-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.video-inline-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.video-inline-1-1 {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.video-inline-1-1 iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: calc(300% * 0.5625); /* 16:9 Aspect Ratio */
+  transform: translate(-50%, -50%);
+}
+
 /* Botones Globales */
 .btn-pill {
   display: inline-flex;
