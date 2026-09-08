@@ -194,25 +194,11 @@ function setupDroneOnCanvas(canvas, section) {
   let width = 0;
   let height = 0;
   let dpr = 1;
-
-  function resize() {
-    const rect = section.getBoundingClientRect();
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    width = rect.width;
-    height = rect.height;
-    canvas.width = Math.max(1, Math.floor(width * dpr));
-    canvas.height = Math.max(1, Math.floor(height * dpr));
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-
-  resize();
-
-  if (window.ResizeObserver) {
-    const ro = new ResizeObserver(() => resize());
-    ro.observe(section);
-  } else {
-    window.addEventListener("resize", resize);
-  }
+  let animId = null;
+  let isSectionVisible = false;
+  let idleTimer = null;
+  let autoHoverTimer = null;
+  let charItems = [];
 
   // Estado del Dron
   const drone = {
@@ -231,10 +217,114 @@ function setupDroneOnCanvas(canvas, section) {
     scale: 0.95
   };
 
-  let animId = null;
-  let isSectionVisible = true;
-  let idleTimer = null;
-  let autoHoverTimer = null;
+  // Preparar todas las letras de los textos en la sección para el efecto de viento
+  function prepareWindLetters() {
+    const textContainers = section.querySelectorAll("h1, h2, h3, h4, p, li, .trabajamos-eyebrow, .significa-eyebrow");
+    textContainers.forEach(container => {
+      if (container.dataset.windPrepared === "true" || container.closest("a, button, .btn-main, .btn-secondary")) return;
+      container.dataset.windPrepared = "true";
+
+      const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
+      const textNodes = [];
+      let node;
+      while ((node = walker.nextNode())) {
+        if (node.nodeValue && node.nodeValue.trim().length > 0) {
+          textNodes.push(node);
+        }
+      }
+
+      textNodes.forEach(textNode => {
+        const text = textNode.nodeValue;
+        const frag = document.createDocumentFragment();
+        for (let i = 0; i < text.length; i++) {
+          const ch = text[i];
+          if (ch === " " || ch === "\n" || ch === "\t") {
+            frag.appendChild(document.createTextNode(ch));
+          } else {
+            const span = document.createElement("span");
+            span.className = "drone-wind-char";
+            span.textContent = ch;
+            frag.appendChild(span);
+          }
+        }
+        textNode.parentNode.replaceChild(frag, textNode);
+      });
+    });
+  }
+
+  function cacheCharPositions() {
+    const sRect = section.getBoundingClientRect();
+    const spans = section.querySelectorAll(".drone-wind-char");
+    charItems = [];
+    spans.forEach(span => {
+      const r = span.getBoundingClientRect();
+      charItems.push({
+        span: span,
+        x: (r.left + r.right) / 2 - sRect.left,
+        y: (r.top + r.bottom) / 2 - sRect.top,
+        isBlown: false
+      });
+    });
+  }
+
+  function resetBlownLetters() {
+    for (let i = 0; i < charItems.length; i++) {
+      if (charItems[i].isBlown) {
+        charItems[i].span.style.transform = "";
+        charItems[i].isBlown = false;
+      }
+    }
+  }
+
+  prepareWindLetters();
+
+  function resize() {
+    const rect = section.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = rect.width;
+    height = rect.height;
+    canvas.width = Math.max(1, Math.floor(width * dpr));
+    canvas.height = Math.max(1, Math.floor(height * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cacheCharPositions();
+  }
+
+  resize();
+
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(() => resize());
+    ro.observe(section);
+  } else {
+    window.addEventListener("resize", resize);
+  }
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+      cacheCharPositions();
+    });
+  }
+
+  // Obtener posición junto al título principal
+  function getTitleTarget() {
+    const titleEl = section.querySelector("h2, h1, .trabajamos-titulo, .section-title, .significa-title, .beneficios-title, [class*='titulo'], [class*='title']") || section.querySelector("p");
+    if (!titleEl) {
+      return { x: width * 0.72, y: height * 0.35 };
+    }
+    const sRect = section.getBoundingClientRect();
+    const tRect = titleEl.getBoundingClientRect();
+
+    // Posicionarse a la derecha del título (o a la izquierda si no cabe)
+    let tx = (tRect.right - sRect.left) + 48;
+    let ty = (tRect.top - sRect.top) + (tRect.height * 0.45);
+
+    if (tx > width - 65) {
+      tx = Math.max(55, (tRect.left - sRect.left) - 48);
+    }
+    tx = Math.max(50, Math.min(width - 50, tx));
+    ty = Math.max(40, Math.min(height - 40, ty));
+
+    return { x: tx, y: ty };
+  }
 
   function startAnimation() {
     if (!animId) {
@@ -247,6 +337,7 @@ function setupDroneOnCanvas(canvas, section) {
       cancelAnimationFrame(animId);
       animId = null;
     }
+    resetBlownLetters();
     ctx.clearRect(0, 0, width, height);
   }
 
@@ -261,39 +352,29 @@ function setupDroneOnCanvas(canvas, section) {
     }
   }
 
-  // Programa el patrullaje automático cada 5 segundos si no se hace click
-  function scheduleNextPatrol() {
+  // Programa el patrullaje automático (por defecto cada 5 segundos, o delay inicial)
+  function scheduleNextPatrol(delay = 5000) {
     clearAutoTimers();
     if (!isSectionVisible || drone.isPressed) return;
     idleTimer = setTimeout(() => {
       startAutoPatrol();
-    }, 5000);
+    }, delay);
   }
 
   function startAutoPatrol() {
     if (!isSectionVisible || drone.isPressed || drone.state !== "IDLE") return;
 
-    // Posición aleatoria dentro del contenedor
-    const marginX = Math.min(140, Math.max(60, width * 0.18));
-    const marginY = Math.min(100, Math.max(50, height * 0.22));
-    const randTargetX = marginX + Math.random() * (width - marginX * 2);
-    const randTargetY = marginY + Math.random() * (height - marginY * 2);
+    // Se posiciona SIEMPRE al lado del título principal
+    const titlePos = getTitleTarget();
+    drone.targetX = titlePos.x;
+    drone.targetY = titlePos.y;
 
-    drone.targetX = randTargetX;
-    drone.targetY = randTargetY;
+    // Entrada exterior veloz desde arriba
+    drone.x = titlePos.x + (Math.random() > 0.5 ? 90 : -90);
+    drone.y = -70;
 
-    // Entrada desde un borde aleatorio exterior
-    const fromSide = Math.random() > 0.4;
-    if (fromSide) {
-      drone.x = Math.random() > 0.5 ? -70 : width + 70;
-      drone.y = marginY + Math.random() * (height - marginY * 2);
-    } else {
-      drone.x = randTargetX + (Math.random() > 0.5 ? 90 : -90);
-      drone.y = -60;
-    }
-
-    drone.vx = (randTargetX - drone.x) * 0.04;
-    drone.vy = (randTargetY - drone.y) * 0.04;
+    drone.vx = (titlePos.x - drone.x) * 0.04;
+    drone.vy = (titlePos.y - drone.y) * 0.04;
     drone.tilt = drone.vx * 0.04;
     drone.state = "AUTO_FLYING";
     startAnimation();
@@ -305,6 +386,10 @@ function setupDroneOnCanvas(canvas, section) {
     if (!isLinkOrBtn) {
       window.getSelection()?.removeAllRanges();
     }
+    if (charItems.length === 0) {
+      cacheCharPositions();
+    }
+
     const rect = section.getBoundingClientRect();
     const px = clientX - rect.left;
     const py = clientY - rect.top;
@@ -342,6 +427,7 @@ function setupDroneOnCanvas(canvas, section) {
       // Impulso de aceleración para salir de la pantalla
       drone.exitVx = (drone.vx >= 0 ? 1 : -1) * (5 + Math.random() * 3);
       drone.exitVy = -11 - Math.random() * 4;
+      resetBlownLetters();
     }
   }
 
@@ -420,7 +506,7 @@ function setupDroneOnCanvas(canvas, section) {
       if (dist < 4 && Math.hypot(drone.vx, drone.vy) < 0.6) {
         if (drone.state === "AUTO_FLYING") {
           drone.state = "AUTO_HOVERING";
-          // Flota e inspecciona por 1.8 segundos y luego se va
+          // Flota e inspecciona por 4.5 segundos al lado del título y luego se va
           clearTimeout(autoHoverTimer);
           autoHoverTimer = setTimeout(() => {
             if (drone.state === "AUTO_HOVERING") {
@@ -428,7 +514,7 @@ function setupDroneOnCanvas(canvas, section) {
               drone.exitVx = (Math.random() > 0.5 ? 1 : -1) * (5 + Math.random() * 3);
               drone.exitVy = -10 - Math.random() * 4;
             }
-          }, 1800);
+          }, 4500);
         } else {
           drone.state = "HOVERING";
         }
@@ -475,6 +561,43 @@ function setupDroneOnCanvas(canvas, section) {
       windTilt = Math.sin(t * 2.9) * 0.035;
     }
 
+    // VIENTO DEL DRON SOBRE LAS LETRAS:
+    // Si el dron se acerca a un texto con el mouse apretado o volando, las letras "vuelan"
+    // y al salir el dron se acomodan automáticamente de nuevo.
+    const WIND_RADIUS = 95;
+    const MAX_PUSH = 52;
+    const isBlowing = (drone.state === "FLYING" || drone.state === "HOVERING" || drone.isPressed);
+
+    if (isBlowing && charItems.length > 0) {
+      const curX = drone.x + windBobX;
+      const curY = drone.y + windBobY;
+
+      for (let i = 0; i < charItems.length; i++) {
+        const item = charItems[i];
+        const dx = item.x - curX;
+        const dy = item.y - curY;
+        const dist = Math.hypot(dx, dy);
+
+        if (dist < WIND_RADIUS) {
+          const factor = Math.pow(1 - dist / WIND_RADIUS, 1.4);
+          const angle = Math.atan2(dy, dx);
+          const push = factor * MAX_PUSH;
+          const pushX = Math.cos(angle) * push + Math.sin(t * 10 + item.x) * (5 * factor);
+          const pushY = Math.sin(angle) * push + (factor * 20) + Math.cos(t * 10 + item.y) * (5 * factor);
+          const rot = (Math.cos(angle) * 35 + Math.sin(t * 8) * 16) * factor;
+
+          item.span.style.transform = `translate(${pushX.toFixed(1)}px, ${pushY.toFixed(1)}px) rotate(${rot.toFixed(1)}deg) scale(${1 + factor * 0.12})`;
+          item.isBlown = true;
+        } else if (item.isBlown) {
+          // El dron se alejó de esta letra: se acomoda automáticamente en su lugar
+          item.span.style.transform = "";
+          item.isBlown = false;
+        }
+      }
+    } else {
+      resetBlownLetters();
+    }
+
     // Dibujar dron si está en pantalla
     if (drone.state !== "IDLE") {
       drawDrone(
@@ -497,7 +620,7 @@ function setupDroneOnCanvas(canvas, section) {
       isSectionVisible = entry.isIntersecting;
       if (isSectionVisible) {
         if (drone.state === "IDLE") {
-          scheduleNextPatrol();
+          scheduleNextPatrol(400);
         } else if (!animId) {
           animId = requestAnimationFrame(loop);
         }
