@@ -25,9 +25,11 @@
     html, body {
       width: 100vw;
       height: 100vh;
+      height: 100dvh;
       margin: 0;
       padding: 0;
       overflow: hidden;
+      touch-action: none;
       background-color: #296D2B; /* Color sólido oficial de Solanum */
       color: #FFFFFF;
       font-family: var(--font-family-base, 'Montserrat', sans-serif);
@@ -40,8 +42,10 @@
       left: 0;
       width: 100vw;
       height: 100vh;
+      height: 100dvh;
       background-color: #296D2B; /* Fondo sólido uniforme */
       overflow: hidden;
+      touch-action: none;
       display: flex;
       flex-direction: column;
     }
@@ -224,21 +228,25 @@
     #gameCanvas {
       width: 100vw;
       height: 100vh;
+      height: 100dvh;
       display: block;
       background-color: #296D2B; /* Fondo sólido */
       cursor: crosshair;
+      touch-action: none;
     }
 
     /* PESTAÑAS / PANTALLAS DEL JUEGO (MODALES DE INICIO, INTERMEDIO, FIN) */
     .game-screen {
       position: absolute;
       inset: 0;
-      background-color: rgba(30, 30, 30, 0.95); /* Sólido oscuro con leve opacidad */
+      background-color: rgba(30, 30, 30, 0.96); /* Sólido oscuro con leve opacidad */
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
+      justify-content: flex-start;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 1.5rem 1rem;
       text-align: center;
       z-index: 50;
       transition: opacity 0.3s ease, visibility 0.3s;
@@ -262,6 +270,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      margin: auto 0;
     }
 
     .screen-eyebrow {
@@ -498,17 +507,135 @@
     }
 
     @media (max-width: 640px) {
-      .items-grid, .stats-summary {
-        grid-template-columns: 1fr;
-      }
-      .screen-card {
-        padding: 1.6rem 1.2rem;
-      }
       .game-header {
-        padding: 0.8rem 1rem;
+        padding: 0.55rem 0.8rem;
+      }
+      .header-left {
+        gap: 0.45rem;
+      }
+      .btn-header {
+        padding: 0.35rem 0.55rem;
+        font-size: 0.78rem;
+      }
+      .btn-header .btn-text {
+        display: none;
+      }
+      .game-logo {
+        display: none;
+      }
+      .game-hud {
+        gap: 0.55rem;
+      }
+      .hud-stat-label {
+        font-size: 0.58rem;
+        letter-spacing: 0.05em;
       }
       .hud-stat-value {
-        font-size: 1.1rem;
+        font-size: 0.95rem;
+      }
+      #hudWind {
+        font-size: 0.72rem !important;
+      }
+      .life-pill {
+        width: 15px;
+        height: 8px;
+      }
+      .screen-card {
+        padding: 1.35rem 1rem;
+        border-radius: 10px;
+        max-width: 100%;
+      }
+      .screen-eyebrow {
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+      }
+      .screen-title {
+        font-size: clamp(1.35rem, 5vw, 1.85rem);
+        margin-bottom: 0.45rem;
+      }
+      .screen-desc {
+        font-size: 0.82rem;
+        line-height: 1.4;
+        margin-bottom: 0.95rem;
+      }
+      .rule-alert {
+        font-size: 0.74rem;
+        padding: 0.45rem 0.65rem;
+        margin-bottom: 0.95rem;
+      }
+      .items-grid {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        margin-bottom: 1.2rem;
+      }
+      .item-preview {
+        padding: 0.5rem 0.65rem;
+        gap: 0.65rem;
+      }
+      .item-icon-box {
+        width: 32px;
+        height: 32px;
+      }
+      .item-icon-box svg {
+        width: 18px;
+        height: 18px;
+      }
+      .item-info h4 {
+        font-size: 0.78rem;
+      }
+      .item-info span {
+        font-size: 0.7rem;
+      }
+      .btn-main {
+        padding: 0.75rem 1.4rem;
+        font-size: 0.9rem;
+      }
+      .btn-secondary {
+        padding: 0.65rem 1.2rem;
+        font-size: 0.82rem;
+      }
+      .stats-summary {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        margin-bottom: 1.1rem;
+      }
+      .summary-card {
+        padding: 0.6rem 0.45rem;
+      }
+      .summary-card span {
+        font-size: 0.62rem;
+      }
+      .summary-card strong {
+        font-size: 1.2rem;
+      }
+      .rank-badge {
+        font-size: 0.74rem;
+        padding: 0.35rem 0.8rem;
+        margin-bottom: 1rem;
+      }
+      .item-toast {
+        width: 90%;
+        max-width: 350px;
+        padding: 0.5rem 0.9rem;
+        font-size: 0.8rem;
+        top: 4.5rem;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .game-header {
+        padding: 0.45rem 0.6rem;
+      }
+      .game-hud {
+        gap: 0.38rem;
+      }
+      #hudWindBox {
+        display: none;
+      }
+      .life-pill {
+        width: 12px;
+        height: 7px;
       }
     }
   </style>
@@ -525,10 +652,10 @@
     <header class="game-header">
       <div class="header-left">
         <a href="index.html" class="btn-header" title="Volver al sitio de Solanum">
-          &larr; Salir
+          &larr; <span class="btn-text">Salir</span>
         </a>
         <button class="btn-header" id="btnFullscreen" title="Alternar pantalla completa">
-          ⛶ Pantalla Completa
+          ⛶ <span class="btn-text">Pantalla Completa</span>
         </button>
         <img src="assets/header/logoheader.png" alt="Solanum Logo" class="game-logo">
       </div>
@@ -1039,18 +1166,26 @@
       btnSound.textContent = soundFX.muted ? "🔇" : "🔊";
     });
 
-    // ENTRADA DE USUARIO (MOUSE Y TOUCH)
+    // ENTRADA DE USUARIO (MOUSE Y TOUCH RESPONSIVE)
     window.addEventListener("mousemove", (e) => {
       if (gameState.status !== "PLAYING") return;
-      gameState.droneTargetX = Math.max(50, Math.min(gameState.width - 50, e.clientX));
-      gameState.droneTargetY = Math.max(70, Math.min(gameState.height - 70, e.clientY));
+      const margin = gameState.width < 500 ? 32 : 45;
+      gameState.droneTargetX = Math.max(margin, Math.min(gameState.width - margin, e.clientX));
+      gameState.droneTargetY = Math.max(65, Math.min(gameState.height - 65, e.clientY));
     });
 
-    window.addEventListener("touchmove", (e) => {
+    function handleTouch(e) {
       if (gameState.status !== "PLAYING" || !e.touches.length) return;
-      gameState.droneTargetX = Math.max(50, Math.min(gameState.width - 50, e.touches[0].clientX));
-      gameState.droneTargetY = Math.max(70, Math.min(gameState.height - 70, e.touches[0].clientY));
-    }, { passive: true });
+      const touch = e.touches[0];
+      const margin = gameState.width < 500 ? 32 : 45;
+      gameState.droneTargetX = Math.max(margin, Math.min(gameState.width - margin, touch.clientX));
+      // En mobile, desplazar el dron ~40px por encima del dedo para que el pulgar no tape el dron ni lo que atrapa
+      const touchOffsetY = gameState.width < 600 ? 40 : 0;
+      gameState.droneTargetY = Math.max(65, Math.min(gameState.height - 60, touch.clientY - touchOffsetY));
+    }
+
+    window.addEventListener("touchstart", handleTouch, { passive: true });
+    window.addEventListener("touchmove", handleTouch, { passive: true });
 
     // TECLADO (FLECHAS O A/D/W/S)
     const keys = {};
@@ -1096,7 +1231,7 @@
         chosenType = pool[Math.floor(Math.random() * pool.length)];
       }
 
-      const margin = 70;
+      const margin = gameState.width < 500 ? 38 : 70;
       const x = margin + Math.random() * (gameState.width - margin * 2);
 
       // Velocidad progresivamente más rápida por etapa
@@ -1259,13 +1394,15 @@
        COLISIONES Y REGLA DE PÉRDIDA DE VIDA POR NO AGARRAR
        ========================================================================== */
     function checkCollisions() {
-      const droneRadius = 38;
+      const isMobile = gameState.width < 600;
+      const droneRadius = isMobile ? 31 : 38;
+      const itemHitScale = isMobile ? 0.88 : 1.0;
 
       for (let i = gameState.items.length - 1; i >= 0; i--) {
         const it = gameState.items[i];
         const dist = Math.hypot(it.x - gameState.droneX, it.y - gameState.droneY);
 
-        if (dist < droneRadius + it.radius) {
+        if (dist < droneRadius + (it.radius * itemHitScale)) {
           // 1. COLISIÓN CON EL DRON
           if (it.hazard) {
             // Impacto de tormenta / rayo (EN ROJO)
@@ -1450,9 +1587,15 @@
        DIBUJADO VECTORIAL: ITEMS (PELIGRO Y RECARGA EN ROJO)
        ========================================================================== */
     function drawItem(ctx, item) {
+      const isMobile = gameState.width < 600;
+      const itemScale = isMobile ? 0.88 : 1.0;
+
       ctx.save();
       ctx.translate(item.x, item.y);
       ctx.rotate(item.angle);
+      if (isMobile) {
+        ctx.scale(itemScale, itemScale);
+      }
 
       const isRedItem = item.hazard;
 
@@ -1840,12 +1983,15 @@
       }
 
       // 8. DIBUJAR DRON
+      const isMobile = gameState.width < 600;
+      const droneScale = isMobile ? 0.86 : 1.05;
       drawGameDrone(
         ctx,
         gameState.droneX,
         gameState.droneY,
         gameState.droneTilt,
-        gameState.dronePropAngle
+        gameState.dronePropAngle,
+        droneScale
       );
 
       // 9. DIBUJAR TEXTOS FLOTANTES

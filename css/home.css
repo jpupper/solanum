@@ -292,7 +292,7 @@
   font-family: var(--font-family-base);
   font-size: 1.35rem;
   font-weight: var(--font-weight-bold);
-  color: #000000;
+  color: var(--color-white);
   margin-bottom: 0.75rem;
   line-height: 1.18;
 }

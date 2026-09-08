@@ -304,24 +304,36 @@ function setupDroneOnCanvas(canvas, section) {
     });
   }
 
-  // Obtener posición junto al título principal
+  // Obtener posición JUSTO A LA IZQUIERDA del elemento de título (pegado al texto, no al borde de la página)
   function getTitleTarget() {
-    const titleEl = section.querySelector("h2, h1, .trabajamos-titulo, .section-title, .significa-title, .beneficios-title, [class*='titulo'], [class*='title']") || section.querySelector("p");
+    const titleEl = section.querySelector(
+      ".significa-title.reveal.active, .significa-title.reveal, .significa-title, .trabajamos-titulo, .beneficios-title, .section-title, h2, h1, [class*='titulo'], [class*='title']"
+    ) || section.querySelector("p");
+
     if (!titleEl) {
-      return { x: width * 0.72, y: height * 0.35 };
+      return { x: 70, y: height * 0.35 };
     }
+
     const sRect = section.getBoundingClientRect();
     const tRect = titleEl.getBoundingClientRect();
 
-    // Posicionarse a la derecha del título (o a la izquierda si no cabe)
-    let tx = (tRect.right - sRect.left) + 48;
-    let ty = (tRect.top - sRect.top) + (tRect.height * 0.45);
+    // Posicionarse JUSTO A LA IZQUIERDA pegado al texto del título, NO a la izquierda de la página
+    const titleLeftInCanvas = tRect.left - sRect.left;
+    
+    // Dron situado ~44px a la izquierda del inicio exacto del texto del título
+    let tx = titleLeftInCanvas - 44;
 
-    if (tx > width - 65) {
-      tx = Math.max(55, (tRect.left - sRect.left) - 48);
+    // Si la pantalla es muy estrecha o el margen es pequeño, mantenerlo visible en el canvas
+    if (tx < 35) {
+      tx = Math.max(28, titleLeftInCanvas - 34);
     }
-    tx = Math.max(50, Math.min(width - 50, tx));
-    ty = Math.max(40, Math.min(height - 40, ty));
+
+    // Centrado verticalmente con la primera línea del texto del título
+    const firstLineOffset = Math.min(36, tRect.height * 0.38);
+    let ty = (tRect.top - sRect.top) + firstLineOffset;
+
+    tx = Math.max(25, Math.min(width - 35, tx));
+    ty = Math.max(30, Math.min(height - 30, ty));
 
     return { x: tx, y: ty };
   }
@@ -520,6 +532,11 @@ function setupDroneOnCanvas(canvas, section) {
         }
       }
     } else if (drone.state === "HOVERING" || drone.state === "AUTO_HOVERING") {
+      if (drone.state === "AUTO_HOVERING") {
+        const liveTarget = getTitleTarget();
+        drone.targetX = liveTarget.x;
+        drone.targetY = liveTarget.y;
+      }
       // Ajuste suave en reposo
       drone.x += (drone.targetX - drone.x) * 0.08;
       drone.y += (drone.targetY - drone.y) * 0.08;
