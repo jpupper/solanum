@@ -312,6 +312,12 @@
   margin-bottom: 0.5rem;
 }
 
+#dron1 {
+  width: 60px;
+  height: 60px;
+
+}
+
 @media (max-width: 1024px) {
   .significa-grid {
     grid-template-columns: repeat(2, 1fr);
