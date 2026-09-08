@@ -129,7 +129,10 @@
   padding: var(--spacing-md) 0;
   position: sticky;
   top: 0;
-  z-index: 100;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
   animation: headerSlideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
@@ -303,4 +306,71 @@
 @media (max-width: 768px) {
   .nav-menu { display: none; }
   .footer-grid { grid-template-columns: 1fr; }
+}
+
+/* --------------------------------------------------------------------------
+   BOTÓN FLOTANTE WHATSAPP (CTA GLOBAL PERMANENTE)
+   -------------------------------------------------------------------------- */
+.floating-wsp {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 9999;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  background-color: var(--color-whatsapp);
+  color: var(--color-white);
+  padding: 0.75rem 1.35rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-family-base);
+  font-size: var(--fs-boton);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4), 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+  animation: floatingWspEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.floating-wsp:hover {
+  background-color: #20b858;
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5), 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.floating-wsp img,
+.floating-wsp svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.floating-wsp span {
+  display: inline-block;
+  line-height: 1;
+}
+
+@keyframes floatingWspEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 640px) {
+  .floating-wsp {
+    bottom: 20px;
+    right: 20px;
+    padding: 0.85rem;
+    border-radius: 50%;
+  }
+  .floating-wsp span {
+    display: none;
+  }
 }

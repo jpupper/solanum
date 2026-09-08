@@ -63,7 +63,7 @@
    -------------------------------------------------------------------------- */
 .soluciones {
   padding: var(--spacing-3xl) 0;
-  background-color: var(--color-white);
+  background-color: var(--color-bg-descanso);
 }
 
 .soluciones-header {
@@ -312,7 +312,7 @@
    -------------------------------------------------------------------------- */
 .marcas {
   padding: var(--spacing-2xl) 0;
-  background-color: var(--color-white);
+  background-color: var(--color-bg-descanso);
   overflow: hidden;
 }
 
@@ -349,12 +349,12 @@
 
 .carousel-wrapper::before {
   left: 0;
-  background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(to right, rgba(244, 245, 247, 1) 0%, rgba(244, 245, 247, 0) 100%);
 }
 
 .carousel-wrapper::after {
   right: 0;
-  background: linear-gradient(to left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(to left, rgba(244, 245, 247, 1) 0%, rgba(244, 245, 247, 0) 100%);
 }
 
 .carousel-track {

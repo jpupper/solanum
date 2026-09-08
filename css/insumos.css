@@ -55,8 +55,8 @@
 
 /* Que Encontras Section */
 .que-encontras {
-  padding: 4rem 0 0 0;
-  background-color: #fff;
+  padding: 3rem 0 5rem;
+  background-color: var(--color-bg-descanso);
 }
 
 .section-title {
@@ -70,9 +70,16 @@
 .section-desc {
   font-family: var(--font-family-base);
   font-size: 1.15rem;
-  color: #333;
+  color: #444;
   max-width: 700px;
   line-height: 1.5;
+}
+
+.lineas-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  width: 100%;
 }
 
 .linea-row {
@@ -80,7 +87,12 @@
   grid-template-columns: 1fr 1fr;
   align-items: stretch;
   gap: 0;
-  min-height: 520px;
+  min-height: 480px;
+  background-color: #FFFFFF;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .linea-row.row-reverse {
@@ -89,6 +101,11 @@
 
 .linea-row.row-reverse .linea-img-col {
   order: 2;
+}
+
+.linea-row.row-reverse .linea-text-col {
+  order: 1;
+  padding: 4rem 3.5rem;
 }
 
 .linea-img-col {
@@ -101,7 +118,6 @@
 .linea-img-col img {
   width: 100%;
   height: 100%;
-  max-height: 560px;
   object-fit: cover;
   object-position: center;
   border-radius: 0;
@@ -112,13 +128,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 4.5rem 4rem 4.5rem 10%;
-  background-color: #F1F1F1;
-}
-
-.linea-row.row-reverse .linea-text-col {
-  order: 1;
-  padding: 4.5rem 0 4.5rem 4rem;
+  padding: 4rem 3.5rem;
+  background-color: #FFFFFF;
 }
 
 .color-insumo {
@@ -157,7 +168,7 @@
 /* Marcas Section */
 .marcas-insumos {
   padding: 4rem 0;
-  background-color: #fff;
+  background-color: var(--color-bg-descanso);
 }
 
 .marcas-title {
@@ -195,12 +206,12 @@
 
 .carousel-wrapper::before {
   left: 0;
-  background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(to right, rgba(244, 245, 247, 1) 0%, rgba(244, 245, 247, 0) 100%);
 }
 
 .carousel-wrapper::after {
   right: 0;
-  background: linear-gradient(to left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(to left, rgba(244, 245, 247, 1) 0%, rgba(244, 245, 247, 0) 100%);
 }
 
 .carousel-track {

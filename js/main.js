@@ -89,9 +89,25 @@ function initScrollAnimations() {
   });
 }
 
+function renderFloatingWsp() {
+  if (document.querySelector(".floating-wsp")) return;
+  const wspBtn = document.createElement("a");
+  wspBtn.href = "https://wa.me/5492644565402";
+  wspBtn.target = "_blank";
+  wspBtn.rel = "noopener noreferrer";
+  wspBtn.className = "floating-wsp";
+  wspBtn.setAttribute("aria-label", "Hablar con un asesor por WhatsApp");
+  wspBtn.innerHTML = `
+    <img src="assets/drones/whatsappicon.png" alt="WhatsApp">
+    <span>Hablar con un asesor</span>
+  `;
+  document.body.appendChild(wspBtn);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   renderHeader();
   renderFooter();
+  renderFloatingWsp();
   initScrollAnimations();
   initYouTubeBackgrounds();
 });

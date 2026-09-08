@@ -78,6 +78,7 @@
   --color-white: #FFFFFF;
   --color-black: #000000;
   --color-gray-bg: #EAEAEA;
+  --color-bg-descanso: #F4F5F7;
   --color-text-dark: #1E1E1E;
   --color-text-light: #FFFFFF;
 
@@ -140,7 +141,7 @@
   /* 64px */
   --spacing-3xl: 6rem;
   /* 96px */
-  --container-max-width: 1320px;
+  --container-max-width: 1200px;
   --transition-fast: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-normal: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-slow: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
@@ -164,7 +165,7 @@
 
 html,
 body {
-  overflow-x: hidden;
+  overflow-x: clip;
   width: 100%;
 }
 
@@ -182,7 +183,7 @@ body {
   font-weight: var(--font-weight-book);
   line-height: var(--lh-body);
   color: var(--color-text-dark);
-  background-color: var(--color-white);
+  background-color: var(--color-bg-descanso);
 }
 
 /* --------------------------------------------------------------------------

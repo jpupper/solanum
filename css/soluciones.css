@@ -47,7 +47,7 @@
 /* GRID DE SOLUCIONES */
 .soluciones-grid-section {
   padding: var(--spacing-3xl) 0;
-  background-color: var(--color-white);
+  background-color: var(--color-bg-descanso);
 }
 
 .section-header {
