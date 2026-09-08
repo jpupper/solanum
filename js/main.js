@@ -304,35 +304,64 @@ function setupDroneOnCanvas(canvas, section) {
     });
   }
 
-  // Obtener posición JUSTO A LA IZQUIERDA del elemento de título (pegado al texto, no al borde de la página)
+  // Obtener posición: TÍTULO A LA IZQUIERDA y DRON A LA DERECHA (pegado al texto del título)
   function getTitleTarget() {
     const titleEl = section.querySelector(
       ".significa-title.reveal.active, .significa-title.reveal, .significa-title, .trabajamos-titulo, .beneficios-title, .section-title, h2, h1, [class*='titulo'], [class*='title']"
     ) || section.querySelector("p");
 
     if (!titleEl) {
-      return { x: 70, y: height * 0.35 };
+      return { x: width * 0.65, y: height * 0.35 };
     }
 
     const sRect = section.getBoundingClientRect();
     const tRect = titleEl.getBoundingClientRect();
 
-    // Posicionarse JUSTO A LA IZQUIERDA pegado al texto del título, NO a la izquierda de la página
-    const titleLeftInCanvas = tRect.left - sRect.left;
-    
-    // Dron situado ~44px a la izquierda del inicio exacto del texto del título
-    let tx = titleLeftInCanvas - 44;
+    let textRight = 0;
+    let firstLineTop = tRect.top;
+    let firstLineHeight = Math.min(48, tRect.height * 0.45);
 
-    // Si la pantalla es muy estrecha o el margen es pequeño, mantenerlo visible en el canvas
-    if (tx < 35) {
-      tx = Math.max(28, titleLeftInCanvas - 34);
+    // Calcular el borde derecho real del texto usando los spans de caracteres de la primera línea
+    const spans = titleEl.querySelectorAll(".drone-wind-char");
+    if (spans.length > 0) {
+      firstLineTop = spans[0].getBoundingClientRect().top;
+      firstLineHeight = spans[0].getBoundingClientRect().height || 36;
+      spans.forEach(s => {
+        const r = s.getBoundingClientRect();
+        if (Math.abs(r.top - firstLineTop) < 18) {
+          if (r.right > textRight) textRight = r.right;
+        }
+      });
     }
 
-    // Centrado verticalmente con la primera línea del texto del título
-    const firstLineOffset = Math.min(36, tRect.height * 0.38);
-    let ty = (tRect.top - sRect.top) + firstLineOffset;
+    if (!textRight) {
+      // Fallback exacto si aún no se generaron los spans
+      const firstLineText = (titleEl.textContent || "").split("\n")[0] || "";
+      const tempSpan = document.createElement("span");
+      tempSpan.style.font = window.getComputedStyle(titleEl).font;
+      tempSpan.style.visibility = "hidden";
+      tempSpan.style.position = "absolute";
+      tempSpan.style.whiteSpace = "nowrap";
+      tempSpan.textContent = firstLineText;
+      document.body.appendChild(tempSpan);
+      const measuredWidth = tempSpan.offsetWidth;
+      document.body.removeChild(tempSpan);
 
-    tx = Math.max(25, Math.min(width - 35, tx));
+      textRight = tRect.left + (measuredWidth > 0 ? measuredWidth : Math.min(360, tRect.width));
+    }
+
+    // El título queda a la IZQUIERDA y el dron A LA DERECHA (~46px a la derecha del final del texto)
+    const textRightInCanvas = textRight - sRect.left;
+    let tx = textRightInCanvas + 46;
+
+    // Si en pantallas estrechas sobrepasa el margen derecho, mantenerlo visible
+    if (tx > width - 42) {
+      tx = Math.max(width - 42, textRightInCanvas + 28);
+    }
+    tx = Math.max(35, Math.min(width - 40, tx));
+
+    // Centrado verticalmente con la primera línea del título
+    let ty = (firstLineTop - sRect.top) + (firstLineHeight * 0.5);
     ty = Math.max(30, Math.min(height - 30, ty));
 
     return { x: tx, y: ty };
@@ -381,8 +410,8 @@ function setupDroneOnCanvas(canvas, section) {
     drone.targetX = titlePos.x;
     drone.targetY = titlePos.y;
 
-    // Entrada exterior veloz desde arriba
-    drone.x = titlePos.x + (Math.random() > 0.5 ? 90 : -90);
+    // Entrada exterior veloz desde arriba hacia la derecha del título
+    drone.x = titlePos.x + 30;
     drone.y = -70;
 
     drone.vx = (titlePos.x - drone.x) * 0.04;
