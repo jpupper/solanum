@@ -44,6 +44,7 @@ function renderFooter() {
         <a href="nosotros.html">Nosotros</a>
         <a href="soluciones.html">Soluciones</a>
         <a href="contacto.html">Contacto</a>
+        <a href="juego.html">Juego</a>
       </div>
 
       <div class="footer-col">
