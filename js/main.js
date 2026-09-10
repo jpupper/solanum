@@ -198,7 +198,13 @@ function setupDroneOnCanvas(canvas, section) {
   let isSectionVisible = false;
   let idleTimer = null;
   let autoHoverTimer = null;
-  let charItems = [];
+
+  // Detección si la sección corresponde a Tractores
+  const isTractor = (
+    document.body.getAttribute("data-page") === "tractores" ||
+    window.location.href.includes("tractores") ||
+    Boolean(section.closest("[data-page='tractores']"))
+  );
 
   // Detección si la sección tiene fondo claro (o es aplicaciones.html) para pintar el dron negro
   const isDarkSection = (
@@ -216,8 +222,8 @@ function setupDroneOnCanvas(canvas, section) {
     })()
   );
 
-  // Estado del Dron
-  const drone = {
+  // Estado del Vehículo (Dron o Tractor)
+  const vehicle = {
     x: -150,
     y: -150,
     targetX: -150,
@@ -226,74 +232,16 @@ function setupDroneOnCanvas(canvas, section) {
     vy: 0,
     tilt: 0,
     propAngle: 0,
+    wheelAngle: 0,
+    facing: 1, // 1: derecha, -1: izquierda
     state: "IDLE", // 'IDLE' | 'FLYING' | 'HOVERING' | 'EXITING' | 'AUTO_FLYING' | 'AUTO_HOVERING' | 'AUTO_EXITING'
     isPressed: false,
     exitVx: 0,
     exitVy: 0,
-    scale: 0.95,
-    isDark: isDarkSection
+    scale: isTractor ? 1.05 : 0.95,
+    isDark: isDarkSection,
+    isTractor: isTractor
   };
-
-  // Preparar todas las letras de los textos en la sección para el efecto de viento
-  function prepareWindLetters() {
-    const textContainers = section.querySelectorAll("h1, h2, h3, h4, p, li, .trabajamos-eyebrow, .significa-eyebrow");
-    textContainers.forEach(container => {
-      if (container.dataset.windPrepared === "true" || container.closest("a, button, .btn-main, .btn-secondary")) return;
-      container.dataset.windPrepared = "true";
-
-      const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
-      const textNodes = [];
-      let node;
-      while ((node = walker.nextNode())) {
-        if (node.nodeValue && node.nodeValue.trim().length > 0) {
-          textNodes.push(node);
-        }
-      }
-
-      textNodes.forEach(textNode => {
-        const text = textNode.nodeValue;
-        const frag = document.createDocumentFragment();
-        for (let i = 0; i < text.length; i++) {
-          const ch = text[i];
-          if (ch === " " || ch === "\n" || ch === "\t") {
-            frag.appendChild(document.createTextNode(ch));
-          } else {
-            const span = document.createElement("span");
-            span.className = "drone-wind-char";
-            span.textContent = ch;
-            frag.appendChild(span);
-          }
-        }
-        textNode.parentNode.replaceChild(frag, textNode);
-      });
-    });
-  }
-
-  function cacheCharPositions() {
-    const sRect = section.getBoundingClientRect();
-    const spans = section.querySelectorAll(".drone-wind-char");
-    charItems = [];
-    spans.forEach(span => {
-      const r = span.getBoundingClientRect();
-      charItems.push({
-        span: span,
-        x: (r.left + r.right) / 2 - sRect.left,
-        y: (r.top + r.bottom) / 2 - sRect.top,
-        isBlown: false
-      });
-    });
-  }
-
-  function resetBlownLetters() {
-    for (let i = 0; i < charItems.length; i++) {
-      if (charItems[i].isBlown) {
-        charItems[i].span.style.transform = "";
-        charItems[i].isBlown = false;
-      }
-    }
-  }
-
-  prepareWindLetters();
 
   function resize() {
     const rect = section.getBoundingClientRect();
@@ -303,7 +251,6 @@ function setupDroneOnCanvas(canvas, section) {
     canvas.width = Math.max(1, Math.floor(width * dpr));
     canvas.height = Math.max(1, Math.floor(height * dpr));
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    cacheCharPositions();
   }
 
   resize();
@@ -315,45 +262,39 @@ function setupDroneOnCanvas(canvas, section) {
     window.addEventListener("resize", resize);
   }
 
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(() => {
-      cacheCharPositions();
-    });
-  }
-
-  // Obtener posición: TÍTULO A LA IZQUIERDA y DRON A LA DERECHA (pegado al texto del título)
+  // Obtener posición junto al título principal
   function getTitleTarget() {
     const titleEl = section.querySelector(
       ".significa-title.reveal.active, .significa-title.reveal, .significa-title, .trabajamos-titulo, .beneficios-title, .section-title, h2, h1, [class*='titulo'], [class*='title']"
     ) || section.querySelector("p");
 
     if (!titleEl) {
-      return { x: width * 0.65, y: height * 0.35 };
+      return { x: width * 0.45, y: height * 0.35 };
     }
 
     const sRect = section.getBoundingClientRect();
-    const tRect = titleEl.getBoundingClientRect();
-
     let textRight = 0;
-    let firstLineTop = tRect.top;
-    let firstLineHeight = Math.min(48, tRect.height * 0.45);
+    let firstLineTop = 0;
+    let firstLineHeight = 36;
 
-    // Calcular el borde derecho real del texto usando los spans de caracteres de la primera línea
-    const spans = titleEl.querySelectorAll(".drone-wind-char");
-    if (spans.length > 0) {
-      firstLineTop = spans[0].getBoundingClientRect().top;
-      firstLineHeight = spans[0].getBoundingClientRect().height || 36;
-      spans.forEach(s => {
-        const r = s.getBoundingClientRect();
-        if (Math.abs(r.top - firstLineTop) < 18) {
-          if (r.right > textRight) textRight = r.right;
-        }
-      });
-    }
+    try {
+      const range = document.createRange();
+      range.selectNodeContents(titleEl);
+      const rects = range.getClientRects();
+      if (rects && rects.length > 0) {
+        // Primera línea exacta de texto renderizado
+        const r0 = rects[0];
+        firstLineTop = r0.top;
+        firstLineHeight = r0.height || 36;
+        textRight = r0.right;
+      }
+    } catch (e) {}
 
     if (!textRight) {
-      // Fallback exacto si aún no se generaron los spans
-      const firstLineText = (titleEl.textContent || "").split("\n")[0] || "";
+      const tRect = titleEl.getBoundingClientRect();
+      firstLineTop = tRect.top;
+      firstLineHeight = Math.min(48, tRect.height * 0.45);
+      const firstLineText = (titleEl.innerText || titleEl.textContent || "").split("\n")[0].trim();
       const tempSpan = document.createElement("span");
       tempSpan.style.font = window.getComputedStyle(titleEl).font;
       tempSpan.style.visibility = "hidden";
@@ -364,20 +305,17 @@ function setupDroneOnCanvas(canvas, section) {
       const measuredWidth = tempSpan.offsetWidth;
       document.body.removeChild(tempSpan);
 
-      textRight = tRect.left + (measuredWidth > 0 ? measuredWidth : Math.min(360, tRect.width));
+      textRight = tRect.left + (measuredWidth > 0 ? measuredWidth : Math.min(360, tRect.width * 0.5));
     }
 
-    // El título queda a la IZQUIERDA y el dron A LA DERECHA (~46px a la derecha del final del texto)
     const textRightInCanvas = textRight - sRect.left;
-    let tx = textRightInCanvas + 46;
+    let tx = textRightInCanvas + (vehicle.isTractor ? 118 : 44);
 
-    // Si en pantallas estrechas sobrepasa el margen derecho, mantenerlo visible
     if (tx > width - 42) {
-      tx = Math.max(width - 42, textRightInCanvas + 28);
+      tx = Math.max(width - 42, textRightInCanvas + 35);
     }
     tx = Math.max(35, Math.min(width - 40, tx));
 
-    // Centrado verticalmente con la primera línea del título
     let ty = (firstLineTop - sRect.top) + (firstLineHeight * 0.5);
     ty = Math.max(30, Math.min(height - 30, ty));
 
@@ -395,7 +333,6 @@ function setupDroneOnCanvas(canvas, section) {
       cancelAnimationFrame(animId);
       animId = null;
     }
-    resetBlownLetters();
     ctx.clearRect(0, 0, width, height);
   }
 
@@ -410,82 +347,108 @@ function setupDroneOnCanvas(canvas, section) {
     }
   }
 
-  // Programa el patrullaje automático (por defecto cada 5 segundos, o delay inicial)
   function scheduleNextPatrol(delay = 5000) {
     clearAutoTimers();
-    if (!isSectionVisible || drone.isPressed) return;
+    if (!isSectionVisible || vehicle.isPressed) return;
     idleTimer = setTimeout(() => {
       startAutoPatrol();
     }, delay);
   }
 
   function startAutoPatrol() {
-    if (!isSectionVisible || drone.isPressed || drone.state !== "IDLE") return;
+    if (!isSectionVisible || vehicle.isPressed || vehicle.state !== "IDLE") return;
 
-    // Se posiciona SIEMPRE al lado del título principal
     const titlePos = getTitleTarget();
-    drone.targetX = titlePos.x;
-    drone.targetY = titlePos.y;
+    vehicle.targetX = titlePos.x;
+    vehicle.targetY = titlePos.y;
 
-    // Entrada exterior veloz desde arriba hacia la derecha del título
-    drone.x = titlePos.x + 30;
-    drone.y = -70;
+    if (vehicle.isTractor) {
+      // El tractor entra rodando desde la izquierda hacia su posición junto al título
+      vehicle.x = Math.max(-90, titlePos.x - 220);
+      vehicle.y = titlePos.y;
+      vehicle.vx = 4;
+      vehicle.vy = 0;
+      vehicle.facing = 1; // Mirando hacia la derecha
+    } else {
+      vehicle.x = titlePos.x + 30;
+      vehicle.y = -70;
+      vehicle.vx = (titlePos.x - vehicle.x) * 0.04;
+      vehicle.vy = (titlePos.y - vehicle.y) * 0.04;
+      vehicle.tilt = vehicle.vx * 0.04;
+    }
 
-    drone.vx = (titlePos.x - drone.x) * 0.04;
-    drone.vy = (titlePos.y - drone.y) * 0.04;
-    drone.tilt = drone.vx * 0.04;
-    drone.state = "AUTO_FLYING";
+    vehicle.state = "AUTO_FLYING";
     startAnimation();
   }
 
-  // Interacción manual (click del usuario - máxima prioridad)
   function onPointerDown(clientX, clientY, isLinkOrBtn) {
     clearAutoTimers();
     if (!isLinkOrBtn) {
       window.getSelection()?.removeAllRanges();
-    }
-    if (charItems.length === 0) {
-      cacheCharPositions();
     }
 
     const rect = section.getBoundingClientRect();
     const px = clientX - rect.left;
     const py = clientY - rect.top;
 
-    drone.targetX = px;
-    drone.targetY = py;
-    drone.isPressed = true;
+    vehicle.targetX = px;
+    vehicle.targetY = py;
+    vehicle.isPressed = true;
 
-    // Si estaba inactivo o saliendo, aparece velozmente hacia el click
-    if (drone.state === "IDLE" || drone.state === "EXITING" || drone.state === "AUTO_EXITING") {
-      drone.x = px + (Math.random() > 0.5 ? 80 : -80);
-      drone.y = -60;
-      drone.vx = (px - drone.x) * 0.05;
-      drone.vy = 8;
-      drone.tilt = drone.vx * 0.04;
+    if (vehicle.state === "IDLE" || vehicle.state === "EXITING" || vehicle.state === "AUTO_EXITING") {
+      if (vehicle.isTractor) {
+        const fromLeft = px < width * 0.5;
+        vehicle.x = fromLeft ? -80 : width + 80;
+        vehicle.y = py;
+        vehicle.vx = (px - vehicle.x) * 0.07;
+        vehicle.vy = 0;
+        vehicle.facing = vehicle.vx >= 0 ? 1 : -1;
+      } else {
+        vehicle.x = px + (Math.random() > 0.5 ? 80 : -80);
+        vehicle.y = -60;
+        vehicle.vx = (px - vehicle.x) * 0.05;
+        vehicle.vy = 8;
+        vehicle.tilt = vehicle.vx * 0.04;
+      }
     }
 
-    drone.state = "FLYING";
+    vehicle.state = "FLYING";
     startAnimation();
   }
 
   function onPointerMove(clientX, clientY) {
-    if (drone.isPressed) {
+    if (vehicle.isPressed) {
       const rect = section.getBoundingClientRect();
-      drone.targetX = clientX - rect.left;
-      drone.targetY = clientY - rect.top;
-      drone.state = "FLYING";
+      const px = clientX - rect.left;
+      const py = clientY - rect.top;
+      if (vehicle.isTractor) {
+        const mouseDeltaX = px - vehicle.targetX;
+        // Solo cambia de orientación cuando el usuario mueve activamente el mouse
+        if (mouseDeltaX < -1.5) {
+          vehicle.facing = -1; // Moviendo hacia la izquierda
+        } else if (mouseDeltaX > 1.5) {
+          vehicle.facing = 1;  // Moviendo hacia la derecha
+        }
+      }
+      vehicle.targetX = px;
+      vehicle.targetY = py;
+      vehicle.state = "FLYING";
     }
   }
 
   function onPointerUp() {
-    if (drone.isPressed) {
-      drone.isPressed = false;
-      drone.state = "EXITING";
-      // Impulso de aceleración para salir de la pantalla
-      drone.exitVx = (drone.vx >= 0 ? 1 : -1) * (5 + Math.random() * 3);
-      drone.exitVy = -11 - Math.random() * 4;
-      resetBlownLetters();
+    if (vehicle.isPressed) {
+      vehicle.isPressed = false;
+      vehicle.state = "EXITING";
+      if (vehicle.isTractor) {
+        // Sale andando hacia la derecha
+        vehicle.facing = 1;
+        vehicle.exitVx = 7.5 + Math.random() * 2.5;
+        vehicle.exitVy = 0;
+      } else {
+        vehicle.exitVx = (vehicle.vx >= 0 ? 1 : -1) * (5 + Math.random() * 3);
+        vehicle.exitVy = -11 - Math.random() * 4;
+      }
     }
   }
 
@@ -536,154 +499,178 @@ function setupDroneOnCanvas(canvas, section) {
     const t = timestamp * 0.001;
     ctx.clearRect(0, 0, width, height);
 
-    // Rotación continua de las hélices ("alas")
-    drone.propAngle += 0.65;
+    // Giro de hélices para el dron y ruedas para el tractor
+    vehicle.propAngle += 0.65;
+    if (vehicle.isTractor) {
+      // Giro de ruedas del tractor según el avance
+      vehicle.wheelAngle += vehicle.vx * 0.09;
+      // Cuando no se arrastra con el mouse, siempre mira a la derecha
+      if (!vehicle.isPressed) {
+        vehicle.facing = 1;
+      }
+    }
 
     // FÍSICA Y MOVIMIENTO
-    if (drone.state === "FLYING" || drone.state === "AUTO_FLYING") {
-      const dx = drone.targetX - drone.x;
-      const dy = drone.targetY - drone.y;
+    if (vehicle.state === "FLYING" || vehicle.state === "AUTO_FLYING") {
+      const dx = vehicle.targetX - vehicle.x;
+      const dy = vehicle.targetY - vehicle.y;
       const dist = Math.hypot(dx, dy);
 
-      // Aceleración hacia el objetivo
-      drone.vx += dx * 0.075;
-      drone.vy += dy * 0.075;
+      vehicle.vx += dx * (vehicle.isTractor ? 0.08 : 0.075);
+      vehicle.vy += dy * (vehicle.isTractor ? 0.08 : 0.075);
 
-      // Fricción / amortiguación
-      drone.vx *= 0.82;
-      drone.vy *= 0.82;
+      vehicle.vx *= 0.82;
+      vehicle.vy *= 0.82;
 
-      drone.x += drone.vx;
-      drone.y += drone.vy;
+      // Amortiguación crítica del tractor: se detiene suavemente bajo el cursor sin rebotar ni oscilar
+      if (vehicle.isTractor && vehicle.isPressed && dist < 5) {
+        vehicle.vx *= 0.45;
+        vehicle.vy *= 0.45;
+        if (dist < 0.6) {
+          vehicle.x = vehicle.targetX;
+          vehicle.y = vehicle.targetY;
+          vehicle.vx = 0;
+          vehicle.vy = 0;
+        }
+      }
 
-      // Inclinación dinámica en la dirección del desplazamiento
-      const targetTilt = Math.max(-0.4, Math.min(0.4, drone.vx * 0.035));
-      drone.tilt += (targetTilt - drone.tilt) * 0.15;
+      vehicle.x += vehicle.vx;
+      vehicle.y += vehicle.vy;
 
-      // Al alcanzar el objetivo
-      if (dist < 4 && Math.hypot(drone.vx, drone.vy) < 0.6) {
-        if (drone.state === "AUTO_FLYING") {
-          drone.state = "AUTO_HOVERING";
-          // Flota e inspecciona por 4.5 segundos al lado del título y luego se va
+      const targetTilt = vehicle.isTractor
+        ? Math.max(-0.12, Math.min(0.12, vehicle.vx * 0.012))
+        : Math.max(-0.4, Math.min(0.4, vehicle.vx * 0.035));
+      vehicle.tilt += (targetTilt - vehicle.tilt) * 0.15;
+
+      if (dist < 4 && Math.hypot(vehicle.vx, vehicle.vy) < 0.6) {
+        if (vehicle.state === "AUTO_FLYING") {
+          vehicle.state = "AUTO_HOVERING";
+          if (vehicle.isTractor) {
+            vehicle.facing = 1; // Mirando a la derecha
+          }
           clearTimeout(autoHoverTimer);
           autoHoverTimer = setTimeout(() => {
-            if (drone.state === "AUTO_HOVERING") {
-              drone.state = "AUTO_EXITING";
-              drone.exitVx = (Math.random() > 0.5 ? 1 : -1) * (5 + Math.random() * 3);
-              drone.exitVy = -10 - Math.random() * 4;
+            if (vehicle.state === "AUTO_HOVERING") {
+              vehicle.state = "AUTO_EXITING";
+              if (vehicle.isTractor) {
+                // Sale andando hacia la derecha
+                vehicle.facing = 1;
+                vehicle.exitVx = 7.5 + Math.random() * 2;
+                vehicle.exitVy = 0;
+              } else {
+                vehicle.exitVx = (Math.random() > 0.5 ? 1 : -1) * (5 + Math.random() * 3);
+                vehicle.exitVy = -10 - Math.random() * 4;
+              }
             }
           }, 4500);
         } else {
-          drone.state = "HOVERING";
+          vehicle.state = "HOVERING";
+          if (vehicle.isTractor && !vehicle.isPressed) {
+            vehicle.facing = 1;
+          }
         }
       }
-    } else if (drone.state === "HOVERING" || drone.state === "AUTO_HOVERING") {
-      if (drone.state === "AUTO_HOVERING") {
+    } else if (vehicle.state === "HOVERING" || vehicle.state === "AUTO_HOVERING") {
+      if (vehicle.state === "AUTO_HOVERING") {
         const liveTarget = getTitleTarget();
-        drone.targetX = liveTarget.x;
-        drone.targetY = liveTarget.y;
+        vehicle.targetX = liveTarget.x;
+        vehicle.targetY = liveTarget.y;
       }
-      // Ajuste suave en reposo
-      drone.x += (drone.targetX - drone.x) * 0.08;
-      drone.y += (drone.targetY - drone.y) * 0.08;
-      drone.tilt += (0 - drone.tilt) * 0.1;
-    } else if (drone.state === "EXITING" || drone.state === "AUTO_EXITING") {
-      // Salida acelerada volando fuera de la pantalla
-      drone.vx += drone.exitVx * 0.08;
-      drone.vy += drone.exitVy * 0.08;
-      drone.x += drone.vx;
-      drone.y += drone.vy;
+      vehicle.x += (vehicle.targetX - vehicle.x) * 0.08;
+      vehicle.y += (vehicle.targetY - vehicle.y) * 0.08;
+      vehicle.tilt += (0 - vehicle.tilt) * 0.1;
+      if (vehicle.isTractor && !vehicle.isPressed) {
+        vehicle.facing = 1; // Siempre mirando a la derecha junto al título cuando no se está arrastrando
+      }
+    } else if (vehicle.state === "EXITING" || vehicle.state === "AUTO_EXITING") {
+      if (vehicle.isTractor) {
+        vehicle.facing = 1; // Sale andando hacia la derecha
+      }
+      vehicle.vx += vehicle.exitVx * 0.08;
+      vehicle.vy += vehicle.exitVy * 0.08;
+      vehicle.x += vehicle.vx;
+      vehicle.y += vehicle.vy;
 
-      // Inclinación hacia arriba mientras escapa
-      const exitTilt = (drone.exitVx > 0 ? 0.35 : -0.35);
-      drone.tilt += (exitTilt - drone.tilt) * 0.1;
+      if (!vehicle.isTractor) {
+        const exitTilt = (vehicle.exitVx > 0 ? 0.35 : -0.35);
+        vehicle.tilt += (exitTilt - vehicle.tilt) * 0.1;
+      }
 
-      // Si salió completamente de los límites del contenedor
-      if (drone.y < -100 || drone.x < -120 || drone.x > width + 120 || drone.y > height + 100) {
-        drone.state = "IDLE";
+      if (
+        vehicle.y < -120 ||
+        vehicle.x < -160 ||
+        vehicle.x > width + 160 ||
+        vehicle.y > height + 120
+      ) {
+        vehicle.state = "IDLE";
         stopAnimation();
-        // Programar el siguiente patrullaje en 5 segundos
         scheduleNextPatrol();
         return;
       }
     }
 
-    // Efecto de viento (oscilación sutil de sustentación arriba y abajo)
-    let windBobY = 0;
-    let windBobX = 0;
-    let windTilt = 0;
+    // Efecto de oscilación de suspensión / viento
+    let bobY = 0;
+    let bobX = 0;
+    let tiltEffect = 0;
 
     if (
-      drone.state === "HOVERING" ||
-      drone.state === "AUTO_HOVERING" ||
-      drone.state === "FLYING" ||
-      drone.state === "AUTO_FLYING"
+      vehicle.state === "HOVERING" ||
+      vehicle.state === "AUTO_HOVERING" ||
+      vehicle.state === "FLYING" ||
+      vehicle.state === "AUTO_FLYING"
     ) {
-      windBobY = Math.sin(t * 3.8) * 4.2 + Math.sin(t * 7.5) * 1.3;
-      windBobX = Math.cos(t * 2.1) * 1.2;
-      windTilt = Math.sin(t * 2.9) * 0.035;
-    }
-
-    // VIENTO DEL DRON SOBRE LAS LETRAS:
-    // Si el dron se acerca a un texto con el mouse apretado o volando, las letras "vuelan"
-    // y al salir el dron se acomodan automáticamente de nuevo.
-    const WIND_RADIUS = 95;
-    const MAX_PUSH = 52;
-    const isBlowing = (drone.state === "FLYING" || drone.state === "HOVERING" || drone.isPressed);
-
-    if (isBlowing && charItems.length > 0) {
-      const curX = drone.x + windBobX;
-      const curY = drone.y + windBobY;
-
-      for (let i = 0; i < charItems.length; i++) {
-        const item = charItems[i];
-        const dx = item.x - curX;
-        const dy = item.y - curY;
-        const dist = Math.hypot(dx, dy);
-
-        if (dist < WIND_RADIUS) {
-          const factor = Math.pow(1 - dist / WIND_RADIUS, 1.4);
-          const angle = Math.atan2(dy, dx);
-          const push = factor * MAX_PUSH;
-          const pushX = Math.cos(angle) * push + Math.sin(t * 10 + item.x) * (5 * factor);
-          const pushY = Math.sin(angle) * push + (factor * 20) + Math.cos(t * 10 + item.y) * (5 * factor);
-          const rot = (Math.cos(angle) * 35 + Math.sin(t * 8) * 16) * factor;
-
-          item.span.style.transform = `translate(${pushX.toFixed(1)}px, ${pushY.toFixed(1)}px) rotate(${rot.toFixed(1)}deg) scale(${1 + factor * 0.12})`;
-          item.isBlown = true;
-        } else if (item.isBlown) {
-          // El dron se alejó de esta letra: se acomoda automáticamente en su lugar
-          item.span.style.transform = "";
-          item.isBlown = false;
-        }
+      if (vehicle.isTractor) {
+        const isMoving = Math.hypot(vehicle.vx, vehicle.vy) > 0.3;
+        bobY = isMoving ? Math.sin(t * 16) * 1.2 : Math.sin(t * 6) * 0.5;
+        bobX = 0;
+        tiltEffect = isMoving ? Math.sin(t * 8) * 0.015 : 0;
+      } else {
+        bobY = Math.sin(t * 3.8) * 4.2 + Math.sin(t * 7.5) * 1.3;
+        bobX = Math.cos(t * 2.1) * 1.2;
+        tiltEffect = Math.sin(t * 2.9) * 0.035;
       }
-    } else {
-      resetBlownLetters();
     }
 
-    // Dibujar dron si está en pantalla
-    if (drone.state !== "IDLE") {
-      drawDrone(
-        ctx,
-        drone.x + windBobX,
-        drone.y + windBobY,
-        drone.tilt + windTilt,
-        drone.propAngle,
-        windBobY,
-        drone.scale,
-        drone.isDark
-      );
+    // NOTA: Se eliminó el efecto de dispersión / viento sobre las letras por requerimiento de usuario.
+    // El texto permanece estático, nítido y accesible al aproximarse el vehículo.
+
+    // Dibujar vehículo
+    if (vehicle.state !== "IDLE") {
+      if (vehicle.isTractor) {
+        drawTractor(
+          ctx,
+          vehicle.x + bobX,
+          vehicle.y + bobY,
+          vehicle.tilt + tiltEffect,
+          vehicle.wheelAngle,
+          bobY,
+          vehicle.scale,
+          vehicle.facing,
+          vehicle.isDark
+        );
+      } else {
+        drawDrone(
+          ctx,
+          vehicle.x + bobX,
+          vehicle.y + bobY,
+          vehicle.tilt + tiltEffect,
+          vehicle.propAngle,
+          bobY,
+          vehicle.scale,
+          vehicle.isDark
+        );
+      }
     }
 
     animId = requestAnimationFrame(loop);
   }
 
-  // IntersectionObserver para activar/desactivar y pausar fuera del viewport
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       isSectionVisible = entry.isIntersecting;
       if (isSectionVisible) {
-        if (drone.state === "IDLE") {
+        if (vehicle.state === "IDLE") {
           scheduleNextPatrol(400);
         } else if (!animId) {
           animId = requestAnimationFrame(loop);
@@ -695,6 +682,363 @@ function setupDroneOnCanvas(canvas, section) {
   }, { threshold: 0, rootMargin: "200px 0px" });
 
   observer.observe(section);
+}
+
+/**
+ * Renderizado vectorial de Tractor Agrícola Moderno
+ * Basado en la silueta y componentes del modelo de referencia:
+ * - Gran rueda trasera con tacos de tracción en V (chevron) y cubo reductor
+ * - Rueda delantera robusta con guardabarros curvo
+ * - Cabina panorámica moderna con 4 pilares oscuros y lunas tintadas
+ * - Techo envolvente con visera, faros de trabajo LED frontales y baliza ámbar parpadeante
+ * - Capó estilizado aerodinámico con parrilla frontal y faros principales
+ * - Chimenea de escape vertical alta y toma de aire
+ * - Bloque de contrapeso frontal y enganche hidráulico trasero
+ * - Escalerilla lateral de acceso
+ */
+function drawTractor(ctx, x, y, tilt, wheelAngle, bobY, scale, facing = 1, isDark = false) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(scale * facing, scale);
+  ctx.rotate(tilt * facing);
+
+  // Paleta de diseño: Estilo Agrochery moderno
+  const bodyRed = "#c81e1e";
+  const bodyRedDark = "#991b1b";
+  const bodyRedLight = "#ef4444";
+  const chassisDark = "#18181b";
+  const steelGray = "#4b5563";
+  const rimColor = "#d1d5db";
+  const rimHub = "#374151";
+  const tireColor = "#171717";
+  const glassReflection = "rgba(255, 255, 255, 0.45)";
+
+  // 1. Sombra suave proyectada en el suelo
+  ctx.save();
+  ctx.beginPath();
+  ctx.ellipse(-26, 26, 30, 7, 0, 0, Math.PI * 2);
+  ctx.ellipse(26, 26, 22, 5.5, 0, 0, Math.PI * 2);
+  ctx.ellipse(0, 26, 45, 6, 0, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(0, 0, 0, 0.32)";
+  ctx.fill();
+  ctx.restore();
+
+  // 2. Enganche trasero hidráulico (3-point hitch)
+  ctx.strokeStyle = steelGray;
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(-36, 12);
+  ctx.lineTo(-48, 16);
+  ctx.lineTo(-44, 22);
+  ctx.moveTo(-38, 6);
+  ctx.lineTo(-49, 10);
+  ctx.stroke();
+
+  // Pasador de acople
+  ctx.fillStyle = "#ef4444";
+  ctx.beginPath();
+  ctx.arc(-48, 16, 2, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 4. Chasis inferior, bloque de motor y depósito
+  ctx.fillStyle = chassisDark;
+  ctx.beginPath();
+  ctx.roundRect(-24, 6, 50, 14, [2, 2, 4, 4]);
+  ctx.fill();
+
+  // Escalera de acceso lateral
+  ctx.strokeStyle = "#9ca3af";
+  ctx.lineWidth = 1.6;
+  ctx.beginPath();
+  ctx.moveTo(-6, 10);
+  ctx.lineTo(-4, 22);
+  ctx.moveTo(4, 10);
+  ctx.lineTo(6, 22);
+  ctx.moveTo(-5, 14);
+  ctx.lineTo(5, 14);
+  ctx.moveTo(-4.5, 18);
+  ctx.lineTo(5.5, 18);
+  ctx.stroke();
+
+  // 5. Contrapeso delantero (bloque de pesas frontal)
+  ctx.fillStyle = "#27272a";
+  ctx.beginPath();
+  ctx.roundRect(40, 6, 16, 15, [2, 4, 4, 2]);
+  ctx.fill();
+  ctx.strokeStyle = "#3f3f46";
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Ranuras de pesas individuales
+  ctx.fillStyle = "#18181b";
+  for (let i = 0; i < 3; i++) {
+    ctx.fillRect(44 + i * 3.5, 8, 1.2, 11);
+  }
+
+  // 6. Capó del motor aerodinámico
+  ctx.beginPath();
+  ctx.moveTo(2, -10);
+  ctx.lineTo(44, 0);
+  ctx.quadraticCurveTo(48, 1, 48, 6);
+  ctx.lineTo(44, 14);
+  ctx.lineTo(2, 10);
+  ctx.closePath();
+
+  const hoodGrad = ctx.createLinearGradient(0, -10, 0, 14);
+  hoodGrad.addColorStop(0, bodyRedLight);
+  hoodGrad.addColorStop(0.35, bodyRed);
+  hoodGrad.addColorStop(1, bodyRedDark);
+  ctx.fillStyle = hoodGrad;
+  ctx.fill();
+
+  ctx.strokeStyle = bodyRedDark;
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Relieves laterales del capó
+  ctx.strokeStyle = "rgba(0, 0, 0, 0.35)";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(12, 1);
+  ctx.lineTo(36, 6);
+  ctx.moveTo(14, 4);
+  ctx.lineTo(34, 8);
+  ctx.stroke();
+
+  // Parrilla frontal
+  ctx.fillStyle = "#09090b";
+  ctx.beginPath();
+  ctx.roundRect(42, 2, 5, 10, [1, 2, 2, 1]);
+  ctx.fill();
+
+  // Faros frontales (apagados)
+  ctx.fillStyle = "#64748b";
+  ctx.beginPath();
+  ctx.rect(44, 3.5, 2.5, 3);
+  ctx.rect(44, 7.5, 2.5, 2.5);
+  ctx.fill();
+  ctx.strokeStyle = "#334155";
+  ctx.lineWidth = 0.5;
+  ctx.stroke();
+
+  // 7. Guardabarros trasero arqueado
+  ctx.beginPath();
+  ctx.arc(-26, -1, 30, Math.PI * 1.05, Math.PI * 1.88);
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = bodyRedDark;
+  ctx.stroke();
+  ctx.lineWidth = 3.5;
+  ctx.strokeStyle = bodyRed;
+  ctx.stroke();
+
+  // 8. Cabina panorámica moderna
+  // Silueta interior (asiento y volante)
+  ctx.fillStyle = "#27272a";
+  ctx.beginPath();
+  ctx.roundRect(-22, -26, 9, 17, 3);
+  ctx.fill();
+  ctx.strokeStyle = "#52525b";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(-4, -14);
+  ctx.lineTo(-7, -20);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(-8, -21, 3.5, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Luna panorámica tintada
+  ctx.beginPath();
+  ctx.moveTo(-24, -8);
+  ctx.lineTo(-24, -30);
+  ctx.quadraticCurveTo(-12, -34, 4, -32);
+  ctx.lineTo(4, -10);
+  ctx.closePath();
+
+  const glassGrad = ctx.createLinearGradient(-24, -32, 4, -8);
+  glassGrad.addColorStop(0, "rgba(224, 242, 254, 0.85)");
+  glassGrad.addColorStop(0.4, "rgba(186, 230, 253, 0.45)");
+  glassGrad.addColorStop(1, "rgba(56, 189, 248, 0.2)");
+  ctx.fillStyle = glassGrad;
+  ctx.fill();
+
+  // Reflejos del cristal
+  ctx.strokeStyle = glassReflection;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(-16, -30);
+  ctx.lineTo(-6, -11);
+  ctx.moveTo(-11, -31);
+  ctx.lineTo(-2, -12);
+  ctx.stroke();
+
+  // Pilares estructurales ROPS
+  ctx.strokeStyle = "#09090b";
+  ctx.lineWidth = 2.4;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(-24, -8);
+  ctx.lineTo(-24, -31);
+  ctx.moveTo(-9, -8);
+  ctx.lineTo(-9, -32);
+  ctx.moveTo(3, -9);
+  ctx.lineTo(2, -32);
+  ctx.stroke();
+
+  // Techo envolvente con visera
+  ctx.beginPath();
+  ctx.moveTo(-29, -31);
+  ctx.lineTo(8, -32);
+  ctx.quadraticCurveTo(11, -34, 8, -38);
+  ctx.lineTo(-27, -37);
+  ctx.quadraticCurveTo(-30, -35, -29, -31);
+  ctx.closePath();
+
+  const roofGrad = ctx.createLinearGradient(0, -38, 0, -31);
+  roofGrad.addColorStop(0, "#f8fafc");
+  roofGrad.addColorStop(0.6, "#e2e8f0");
+  roofGrad.addColorStop(1, bodyRed);
+  ctx.fillStyle = roofGrad;
+  ctx.fill();
+  ctx.strokeStyle = "#94a3b8";
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // 4 Faros de trabajo frontales en la visera (apagados)
+  ctx.fillStyle = "#475569";
+  for (let i = 0; i < 4; i++) {
+    ctx.fillRect(0 + i * 2.2, -33.5, 1.6, 1.8);
+  }
+
+  // Baliza en la esquina del techo (apagada)
+  ctx.fillStyle = "#1e293b";
+  ctx.fillRect(-22, -41, 2, 4);
+  ctx.fillStyle = "#b45309";
+  ctx.beginPath();
+  ctx.roundRect(-23.5, -45, 5, 4.5, 1.5);
+  ctx.fill();
+
+  // Retrovisor exterior
+  ctx.strokeStyle = "#18181b";
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.moveTo(4, -28);
+  ctx.lineTo(9, -26);
+  ctx.stroke();
+  ctx.fillStyle = "#09090b";
+  ctx.fillRect(9, -29, 2.5, 6);
+
+  // Chimenea vertical de escape alta
+  ctx.fillStyle = "#18181b";
+  ctx.beginPath();
+  ctx.roundRect(5, -42, 3, 32, 1);
+  ctx.fill();
+  ctx.strokeStyle = "#52525b";
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(4, -42);
+  ctx.lineTo(9, -44);
+  ctx.stroke();
+
+  // Toma de aire (Snorkel)
+  ctx.fillStyle = "#27272a";
+  ctx.fillRect(-1, -38, 2, 28);
+  ctx.beginPath();
+  ctx.arc(0, -39, 2.5, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 9. Guardabarros delantero
+  ctx.beginPath();
+  ctx.arc(26, 4, 18, Math.PI * 1.15, Math.PI * 1.85);
+  ctx.lineWidth = 3.5;
+  ctx.strokeStyle = "#18181b";
+  ctx.stroke();
+
+  // 10. RUEDAS CON TACOS AGRÍCOLAS (ROTATORIAS)
+  function drawAgriWheel(cx, cy, outerR, innerR, rimR, lugsCount, angle) {
+    ctx.save();
+    ctx.translate(cx, cy);
+
+    // Neumático de goma
+    ctx.beginPath();
+    ctx.arc(0, 0, outerR, 0, Math.PI * 2);
+    ctx.fillStyle = tireColor;
+    ctx.fill();
+
+    // Tacos de tracción en V (Chevron lugs)
+    ctx.save();
+    ctx.rotate(angle);
+    for (let i = 0; i < lugsCount; i++) {
+      ctx.save();
+      ctx.rotate((i * Math.PI * 2) / lugsCount);
+
+      ctx.beginPath();
+      ctx.moveTo(outerR - 1, -2.5);
+      ctx.lineTo(outerR + 3, -1);
+      ctx.lineTo(outerR + 3, 1.5);
+      ctx.lineTo(outerR - innerR * 0.3, 3);
+      ctx.closePath();
+      ctx.fillStyle = "#262626";
+      ctx.fill();
+
+      ctx.strokeStyle = "#0a0a0a";
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+
+      ctx.restore();
+    }
+    ctx.restore();
+
+    // Llanta metálica
+    ctx.beginPath();
+    ctx.arc(0, 0, rimR, 0, Math.PI * 2);
+    ctx.fillStyle = rimColor;
+    ctx.fill();
+    ctx.strokeStyle = "#9ca3af";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Plato central
+    ctx.beginPath();
+    ctx.arc(0, 0, rimR * 0.65, 0, Math.PI * 2);
+    ctx.fillStyle = "#e5e7eb";
+    ctx.fill();
+    ctx.strokeStyle = "#6b7280";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Bulones
+    const bolts = 6;
+    for (let b = 0; b < bolts; b++) {
+      const ba = (b * Math.PI * 2) / bolts;
+      const bx = Math.cos(ba) * (rimR * 0.44);
+      const by = Math.sin(ba) * (rimR * 0.44);
+      ctx.beginPath();
+      ctx.arc(bx, by, 1.1, 0, Math.PI * 2);
+      ctx.fillStyle = "#374151";
+      ctx.fill();
+    }
+
+    // Cubo planetario central
+    ctx.beginPath();
+    ctx.arc(0, 0, rimR * 0.25, 0, Math.PI * 2);
+    ctx.fillStyle = rimHub;
+    ctx.fill();
+    ctx.strokeStyle = "#111827";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  // Rueda Trasera (Grande)
+  drawAgriWheel(-26, 4, 24, 16, 14, 14, wheelAngle);
+
+  // Rueda Delantera (Mediana)
+  drawAgriWheel(26, 12, 16, 11, 9.5, 11, wheelAngle * 1.5);
+
+  ctx.restore();
 }
 
 /**

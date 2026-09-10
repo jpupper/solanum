@@ -445,13 +445,5 @@
   z-index: 1;
 }
 
-/* Efecto de viento del dron sobre las letras */
-.drone-wind-char {
-  display: inline-block;
-  will-change: transform;
-  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
-  pointer-events: none;
-}
-
 
 
