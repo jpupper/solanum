@@ -1,0 +1,10 @@
+node_modules/
+compiled/
+compiled
+compiled_test/
+ftp_credentials.json
+.env
+.DS_Store
+Thumbs.db
+*.log
+

@@ -1,0 +1,8 @@
+open wi551474.ferozo.com
+wi551474@wi551474.ferozo.com
+@XOwiEgfhJ8xN3/
+cd public_html
+binary
+delete contacto.html
+delete index.html
+quit

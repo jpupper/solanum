@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap');
+
 /* ==========================================================================
    SOLANUM - DESIGN SYSTEM & CSS VARIABLES
    Configuración global de variables, tipografía, paleta de colores y utilidades
@@ -83,7 +85,7 @@
   --color-text-light: #FFFFFF;
 
   /* --- TIPOGRAFÍA (FAMILIAS Y PESOS) --- */
-  --font-family-base: 'Gotham', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-base: 'Gotham', 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-weight-book: 400;
   --font-weight-medium: 500;
   --font-weight-bold: 700;

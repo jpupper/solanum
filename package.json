@@ -1,0 +1,26 @@
+{
+  "name": "solanum",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpupper/solanum.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jpupper/solanum/issues"
+  },
+  "homepage": "https://github.com/jpupper/solanum#readme",
+  "dependencies": {
+    "basic-ftp": "^5.0.5",
+    "javascript-obfuscator": "^5.7.0",
+    "sharp": "^0.35.4"
+  }
+}
