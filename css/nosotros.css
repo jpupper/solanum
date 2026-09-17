@@ -1,19 +1,12 @@
-/* ==========================================================================
-   SOLANUM - NOSOTROS PAGE SPECIFIC STYLES
-   ========================================================================== */
-
-/* --------------------------------------------------------------------------
-   1. HERO NOSOTROS (100% VH COMO EL HOME)
-   -------------------------------------------------------------------------- */
 .nosotros-hero {
   position: relative;
-  min-height: calc(100vh - 72px);
-  height: calc(100vh - 72px);
+  min-height: calc(-72px + 100vh);
+  height: calc(-72px + 100vh);
   display: flex;
   align-items: center;
-  background-image: url('../assets/nosotros/fondo.png');
+  background-image: url("../assets/nosotros/fondo.png");
   background-size: cover;
-  background-position: center;
+  background-position: center center;
   overflow: hidden;
 }
 
@@ -29,16 +22,13 @@
 
 .nosotros-hero-title {
   font-family: var(--font-family-base);
-  font-size: clamp(2.5rem, 5.5vw + 1rem, 5.5rem);
+  font-size: clamp(2.5rem, 1rem + 5.5vw, 5.5rem);
   font-weight: var(--font-weight-black);
   line-height: 1.05;
   color: var(--color-white);
   letter-spacing: -0.02em;
 }
 
-/* --------------------------------------------------------------------------
-   2. SPLIT SECTIONS (NUESTRA HISTORIA & CÓMO TRABAJAMOS)
-   -------------------------------------------------------------------------- */
 .nosotros-historia {
   background-color: var(--color-tractores);
   color: var(--color-white);
@@ -55,7 +45,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: stretch;
-  gap: 0;
+  gap: 0px;
   min-height: 520px;
 }
 
@@ -63,7 +53,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 4.5rem 4rem 4.5rem 0;
+  padding: 4.5rem 4rem 4.5rem 0px;
 }
 
 .split-col-image {
@@ -78,7 +68,7 @@
   height: 100%;
   max-height: 560px;
   object-fit: cover;
-  object-position: center;
+  object-position: center center;
   display: block;
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -115,12 +105,12 @@
 }
 
 .split-parrafo:last-of-type {
-  margin-bottom: 0;
+  margin-bottom: 0px;
 }
 
 .nosotros-trabajamos .split-heading {
   font-family: var(--font-family-base);
-  font-size: clamp(2rem, 3.5vw + 0.5rem, 3rem);
+  font-size: clamp(2rem, 0.5rem + 3.5vw, 3rem);
   font-weight: var(--font-weight-black);
   color: var(--color-text-dark);
   line-height: 1.1;
@@ -135,9 +125,6 @@
   margin-bottom: 2rem;
 }
 
-/* --------------------------------------------------------------------------
-   3. SECCIÓN: NUESTRO COMPROMISO
-   -------------------------------------------------------------------------- */
 .compromiso {
   background-color: var(--color-nosotros);
   color: var(--color-white);
@@ -167,46 +154,42 @@
 .compromiso-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0;
+  gap: 0px;
   align-items: stretch;
 }
 
 .compromiso-item {
-  padding: 0 1.5rem 0 2.75rem;
+  padding: 0px 1.5rem 0px 2.75rem;
   position: relative;
   display: flex;
   flex-direction: column;
 }
 
 .compromiso-item:first-child {
-  padding-left: 0;
+  padding-left: 0px;
   padding-right: 2.25rem;
 }
 
 .compromiso-item:last-child {
-  padding-right: 0;
+  padding-right: 0px;
 }
 
 .compromiso-item:not(:first-child)::before {
-  content: '';
+  content: "";
   position: absolute;
-  left: 0;
+  left: 0px;
   top: calc(44px + 0.85rem);
-  bottom: 0;
+  bottom: 0px;
   width: 1px;
   background-color: rgba(255, 255, 255, 0.65);
 }
 
-/* Iconos con color exacto #6E0F0D vía mask */
 .compromiso-icon {
   width: 44px;
   height: 44px;
   background-color: white;
-  -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-  -webkit-mask-size: contain;
   mask-size: contain;
-  -webkit-mask-position: left center;
   mask-position: left center;
   display: block;
   margin-bottom: 0.85rem;
@@ -214,23 +197,19 @@
 }
 
 .compromiso-icon.icon-persona {
-  -webkit-mask-image: url('../assets/iconos/persona.svg');
-  mask-image: url('../assets/iconos/persona.svg');
+  mask-image: url("../assets/iconos/persona.svg");
 }
 
 .compromiso-icon.icon-engranaje {
-  -webkit-mask-image: url('../assets/iconos/engranaje.svg');
-  mask-image: url('../assets/iconos/engranaje.svg');
+  mask-image: url("../assets/iconos/engranaje.svg");
 }
 
 .compromiso-icon.icon-barras {
-  -webkit-mask-image: url('../assets/iconos/barras.svg');
-  mask-image: url('../assets/iconos/barras.svg');
+  mask-image: url("../assets/iconos/barras.svg");
 }
 
 .compromiso-icon.icon-rayo {
-  -webkit-mask-image: url('../assets/iconos/rayo.svg');
-  mask-image: url('../assets/iconos/rayo.svg');
+  mask-image: url("../assets/iconos/rayo.svg");
 }
 
 .compromiso-item:hover .compromiso-icon {
@@ -254,45 +233,51 @@
   max-width: 172px;
 }
 
-/* --------------------------------------------------------------------------
-   4. SECCIÓN: NUESTRA MISIÓN
-   -------------------------------------------------------------------------- */
 .mision {
   position: relative;
-  background-image: url('../assets/nosotros/fondonuestramision.png');
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.3) 45%, rgba(0, 0, 0, 0.05) 80%), url("../assets/nosotros/fondonuestramision.png");
   background-size: cover;
-  background-position: center;
+  background-position: center top;
   background-repeat: no-repeat;
-  padding: var(--spacing-3xl) 0;
+  min-height: clamp(480px, 36vw, 620px);
+  display: flex;
+  align-items: center;
+  padding: 4.5rem 0px;
   overflow: hidden;
 }
 
-.mision-top {
+.mision .container {
+  width: 100%;
+}
+
+.mision-content {
+  max-width: 1200px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: flex-start;
-  gap: 2rem;
-  margin-bottom: 1.5rem;
+  text-align: left;
 }
 
 .mision-eyebrow {
   font-family: var(--font-family-base);
   font-size: 1.15rem;
   font-weight: var(--font-weight-book);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   color: var(--color-white);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.85rem;
   text-transform: uppercase;
+  text-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px;
 }
 
 .mision-titulo {
   font-family: var(--font-family-base);
-  font-size: clamp(2rem, 3.5vw + 0.5rem, 3.2rem);
+  font-size: clamp(2rem, 0.5rem + 3.2vw, 3.2rem);
   font-weight: var(--font-weight-black);
   color: var(--color-white);
-  line-height: 1.1;
+  line-height: 1.12;
   letter-spacing: -0.01em;
-  max-width: 750px;
+  margin-bottom: 1.25rem;
+  text-shadow: rgba(0, 0, 0, 0.45) 0px 2px 6px;
 }
 
 .mision-desc {
@@ -301,31 +286,24 @@
   font-weight: var(--font-weight-book);
   color: var(--color-white);
   line-height: 1.45;
-  max-width: 765px;
+  max-width: 800px;
   opacity: 0.95;
+  text-shadow: rgba(0, 0, 0, 0.4) 0px 1px 4px;
 }
 
-.mision-btn {
-  flex-shrink: 0;
-  margin-top: 0.5rem;
-}
-
-/* --------------------------------------------------------------------------
-   MEDIA QUERIES (NOSOTROS)
-   -------------------------------------------------------------------------- */
 @media (max-width: 1024px) {
   .compromiso-grid {
     grid-template-columns: repeat(2, 1fr);
     row-gap: var(--spacing-2xl);
-    column-gap: 0;
+    column-gap: 0px;
   }
 
   .compromiso-item {
-    padding: 0 1.5rem;
+    padding: 0px 1.5rem;
   }
 
   .compromiso-item:nth-child(2n+1) {
-    padding-left: 0;
+    padding-left: 0px;
   }
 
   .compromiso-item:nth-child(2n+1)::before {
@@ -333,11 +311,11 @@
   }
 
   .compromiso-item:nth-child(2n) {
-    padding-right: 0;
+    padding-right: 0px;
   }
 
   .split-col-text {
-    padding: 3.5rem 2rem 3.5rem 0;
+    padding: 3.5rem 2rem 3.5rem 0px;
   }
 }
 
@@ -348,20 +326,17 @@
   }
 
   .split-col-text {
-    padding: 3rem 0;
+    padding: 3rem 0px;
   }
 
   .split-col-image img {
     max-height: 400px;
   }
 
-  .mision-top {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .mision-btn {
-    margin-top: 1rem;
+  .mision {
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.45) 100%), url("../assets/nosotros/fondonuestramision.png");
+    padding: 3.5rem 0px;
+    min-height: auto;
   }
 }
 
@@ -372,7 +347,7 @@
   }
 
   .compromiso-item {
-    padding: 0;
+    padding: 0px;
   }
 
   .compromiso-item::before {
