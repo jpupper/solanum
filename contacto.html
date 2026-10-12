@@ -32,6 +32,81 @@
       </div>
     </section>
 
+    <!-- SECCIÓN: FORMULARIO DE CONTACTO -->
+    <section class="contacto-form-section" id="formulario-contacto">
+      <div class="container">
+        <div class="contacto-form-wrapper reveal">
+          <h2 class="contacto-form-title">Formulario de contacto</h2>
+          <p class="contacto-form-subtitle">Completá tus datos y te vamos a contactar a la brevedad</p>
+
+          <form id="contactoForm" class="contacto-form" action="enviar-contacto.php" method="POST" novalidate>
+            <!-- Honeypot anti-spam (invisible para usuarios reales) -->
+            <div style="display:none !important;" aria-hidden="true">
+              <input type="text" name="sitio_web" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="contacto-form-grid">
+              <!-- Nombre -->
+              <div class="contacto-field-group">
+                <label for="form-nombre" class="contacto-label">Nombre</label>
+                <input type="text" id="form-nombre" name="nombre" class="contacto-input" placeholder="Tu nombre y apellido" required autocomplete="name">
+              </div>
+
+              <!-- Mail -->
+              <div class="contacto-field-group">
+                <label for="form-mail" class="contacto-label">Mail</label>
+                <input type="email" id="form-mail" name="mail" class="contacto-input" placeholder="tumail@dominio.com" required autocomplete="email">
+              </div>
+
+              <!-- Teléfono -->
+              <div class="contacto-field-group">
+                <label for="form-telefono" class="contacto-label">Teléfono</label>
+                <input type="tel" id="form-telefono" name="telefono" class="contacto-input" placeholder="+54 264 505 0845" autocomplete="tel">
+              </div>
+
+              <!-- Provincia -->
+              <div class="contacto-field-group">
+                <label for="form-provincia" class="contacto-label">Provincia</label>
+                <input type="text" id="form-provincia" name="provincia" class="contacto-input" placeholder="San Juan">
+              </div>
+
+              <!-- Cultivo -->
+              <div class="contacto-field-group">
+                <label for="form-cultivo" class="contacto-label">Cultivo</label>
+                <input type="text" id="form-cultivo" name="cultivo" class="contacto-input" placeholder="Ej: vid, ajo, nogal">
+              </div>
+
+              <!-- Cantidad de hectáreas -->
+              <div class="contacto-field-group">
+                <label for="form-hectareas" class="contacto-label">Cantidad de hectáreas</label>
+                <input type="text" id="form-hectareas" name="hectareas" class="contacto-input" placeholder="1 a 10">
+              </div>
+
+              <!-- Consulta -->
+              <div class="contacto-field-group contacto-field-full">
+                <label for="form-consulta" class="contacto-label">Consulta</label>
+                <textarea id="form-consulta" name="consulta" class="contacto-textarea" rows="4" placeholder="Escribí tu consulta" required></textarea>
+              </div>
+            </div>
+
+            <!-- Feedback de envío -->
+            <div id="contactoFeedback" class="contacto-feedback" role="alert" style="display:none;"></div>
+
+            <!-- Botón Enviar -->
+            <div class="contacto-btn-row">
+              <button type="submit" id="btnEnviarConsulta" class="btn-enviar-consulta">
+                <span class="btn-text">Enviar tu consulta</span>
+                <svg class="icon-send" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
     <!-- SECCIÓN: TAMBIÉN PODÉS VISITARNOS -->
     <section class="contacto-info">
       <div class="container">

@@ -54,7 +54,184 @@
 }
 
 /* --------------------------------------------------------------------------
-   2. SECCIÓN: TAMBIÉN PODÉS VISITARNOS
+   2. SECCIÓN: FORMULARIO DE CONTACTO
+   -------------------------------------------------------------------------- */
+.contacto-form-section {
+  background-color: var(--color-white);
+  padding: 5rem 0 4.5rem;
+}
+
+.contacto-form-wrapper {
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.contacto-form-title {
+  font-family: var(--font-family-base);
+  font-size: clamp(2rem, 3.2vw + 0.5rem, 2.5rem);
+  font-weight: var(--font-weight-black);
+  color: #1A1A1A;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.45rem;
+}
+
+.contacto-form-subtitle {
+  font-family: var(--font-family-base);
+  font-size: 1.05rem;
+  font-weight: var(--font-weight-book);
+  color: #4A4A4A;
+  line-height: 1.45;
+  margin-bottom: 2.25rem;
+}
+
+.contacto-form {
+  width: 100%;
+}
+
+.contacto-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 2rem;
+  row-gap: 1.25rem;
+}
+
+.contacto-field-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.contacto-field-full {
+  grid-column: 1 / -1;
+}
+
+.contacto-label {
+  font-family: var(--font-family-base);
+  font-size: 0.95rem;
+  font-weight: var(--font-weight-bold);
+  color: #1F2428;
+  margin-bottom: 0.45rem;
+  line-height: 1.2;
+}
+
+.contacto-input,
+.contacto-textarea {
+  width: 100%;
+  font-family: var(--font-family-base);
+  font-size: 0.92rem;
+  color: #1A1A1A;
+  background-color: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
+  padding: 0.7rem 0.95rem;
+  line-height: 1.4;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.contacto-input::placeholder,
+.contacto-textarea::placeholder {
+  color: #A0AEC0;
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-book);
+  font-size: 0.88rem;
+}
+
+.contacto-input:focus,
+.contacto-textarea:focus {
+  border-color: #960019;
+  box-shadow: 0 0 0 3px rgba(150, 0, 25, 0.12);
+}
+
+.contacto-textarea {
+  min-height: 125px;
+  resize: vertical;
+}
+
+.contacto-btn-row {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.btn-enviar-consulta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  background-color: #8C0018;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  padding: 0.65rem 1.35rem;
+  font-family: var(--font-family-base);
+  font-size: 0.92rem;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background-color 0.25s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+  box-shadow: 0 2px 6px rgba(140, 0, 24, 0.2);
+}
+
+.btn-enviar-consulta:hover:not(:disabled) {
+  background-color: #720013;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(140, 0, 24, 0.3);
+}
+
+.btn-enviar-consulta:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-enviar-consulta:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-enviar-consulta .icon-send {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+.btn-enviar-consulta:hover:not(:disabled) .icon-send {
+  transform: translate(2px, -2px);
+}
+
+/* Feedback message */
+.contacto-feedback {
+  margin-top: 1.25rem;
+  padding: 0.9rem 1.25rem;
+  border-radius: 8px;
+  font-family: var(--font-family-base);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  animation: fadeInFeedback 0.3s ease-out;
+}
+
+@keyframes fadeInFeedback {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.contacto-feedback.success {
+  background-color: #ECFDF5;
+  border: 1px solid #10B981;
+  color: #065F46;
+}
+
+.contacto-feedback.error {
+  background-color: #FEF2F2;
+  border: 1px solid #EF4444;
+  color: #991B1B;
+}
+
+/* --------------------------------------------------------------------------
+   3. SECCIÓN: TAMBIÉN PODÉS VISITARNOS
    -------------------------------------------------------------------------- */
 .contacto-info {
   background-color: var(--color-bg-descanso);
@@ -188,6 +365,16 @@
 }
 
 @media (max-width: 768px) {
+  .contacto-form-section {
+    padding: 3.5rem 0 3rem;
+  }
+  .contacto-form-grid {
+    grid-template-columns: 1fr;
+    row-gap: 1.15rem;
+  }
+  .contacto-btn-row {
+    margin-top: 1.25rem;
+  }
   .contacto-mapa {
     height: 360px;
   }

@@ -234,7 +234,103 @@ document.addEventListener("DOMContentLoaded", () => {
   initYouTubeBackgrounds();
   initInteractiveDrones();
   initTractorCarousels();
+  initContactForm();
 });
+
+/* Contact Form Handler */
+function initContactForm() {
+  const form = document.getElementById("contactoForm");
+  if (!form) return;
+
+  const feedback = document.getElementById("contactoFeedback");
+  const submitBtn = document.getElementById("btnEnviarConsulta");
+  const btnText = submitBtn ? submitBtn.querySelector(".btn-text") : null;
+  const originalText = btnText ? btnText.textContent : "Enviar tu consulta";
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    if (feedback) {
+      feedback.style.display = "none";
+      feedback.className = "contacto-feedback";
+      feedback.textContent = "";
+    }
+
+    const nombre = form.querySelector('input[name="nombre"]')?.value.trim();
+    const mail = form.querySelector('input[name="mail"]')?.value.trim();
+    const consulta = form.querySelector('textarea[name="consulta"]')?.value.trim();
+
+    if (!nombre) {
+      showFeedback("Por favor ingresá tu nombre y apellido.", "error");
+      form.querySelector('input[name="nombre"]')?.focus();
+      return;
+    }
+
+    if (!mail) {
+      showFeedback("Por favor ingresá tu correo electrónico.", "error");
+      form.querySelector('input[name="mail"]')?.focus();
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(mail)) {
+      showFeedback("Por favor ingresá un formato de correo válido (ej: nombre@dominio.com).", "error");
+      form.querySelector('input[name="mail"]')?.focus();
+      return;
+    }
+
+    if (!consulta) {
+      showFeedback("Por favor escribí tu consulta.", "error");
+      form.querySelector('textarea[name="consulta"]')?.focus();
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const formData = new FormData(form);
+      const response = await fetch("enviar-contacto.php", {
+        method: "POST",
+        body: formData,
+        headers: {
+          "X-Requested-With": "XMLHttpRequest"
+        }
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (response.ok && data && data.success) {
+        showFeedback(data.message || "¡Muchas gracias! Tu consulta ha sido enviada con éxito.", "success");
+        form.reset();
+      } else {
+        const errorMsg = (data && data.message)
+          ? data.message
+          : "Hubo un error al procesar tu consulta. Por favor intentá nuevamente o comunicate por WhatsApp.";
+        showFeedback(errorMsg, "error");
+      }
+    } catch (err) {
+      showFeedback("Ocurrió un error al enviar el formulario. Por favor intentá nuevamente o contactanos directamente por WhatsApp.", "error");
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  function setLoading(isLoading) {
+    if (!submitBtn) return;
+    submitBtn.disabled = isLoading;
+    if (btnText) {
+      btnText.textContent = isLoading ? "Enviando tu consulta..." : originalText;
+    }
+  }
+
+  function showFeedback(message, type) {
+    if (!feedback) return;
+    feedback.className = `contacto-feedback ${type}`;
+    feedback.textContent = message;
+    feedback.style.display = "block";
+    feedback.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+}
 
 /* YT Loop Fix */
 function initYouTubeBackgrounds() {

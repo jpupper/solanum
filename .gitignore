@@ -7,4 +7,6 @@ ftp_credentials.json
 .DS_Store
 Thumbs.db
 *.log
+ftp_win.txt
+test_ftp_cmd.txt
 
