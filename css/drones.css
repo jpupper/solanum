@@ -300,19 +300,162 @@
   position: relative;
   background-image: url('../assets/drones/fondocard.png');
   background-size: cover;
-  background-position: center;
-  padding: 4rem 0;
+  background-position: 72% top;
+  background-repeat: no-repeat;
+  min-height: clamp(450px, 34vw, 560px);
+  display: flex;
+  align-items: center;
+  padding: 5rem 0;
+}
+
+.cta-section .container {
+  width: 100%;
 }
 
 .cta-title {
   color: var(--color-white);
   font-family: var(--font-family-base);
-  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-size: clamp(2.3rem, 3.8vw, 3.5rem);
   font-weight: var(--font-weight-black);
-  margin-bottom: 0.5rem;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+  max-width: 680px;
 }
 
+/* --------------------------------------------------------------------------
+   SECCIÓN: APLICACIONES AÉREAS (BANNER DE VIDEO CAPTURA 4)
+   -------------------------------------------------------------------------- */
+.drones-aplicaciones-banner {
+  position: relative;
+  min-height: clamp(480px, 45vw, 640px);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
 
+.drones-aplicaciones-content {
+  max-width: 820px;
+  padding: 4.5rem 0;
+}
+
+.drones-aplicaciones-title {
+  color: var(--color-white);
+  font-family: var(--font-family-base);
+  font-size: clamp(2.3rem, 4.5vw, 3.8rem);
+  font-weight: var(--font-weight-black);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  margin-bottom: 1.25rem;
+}
+
+.drones-aplicaciones-desc {
+  color: var(--color-white);
+  font-family: var(--font-family-base);
+  font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+  font-weight: var(--font-weight-book);
+  line-height: 1.45;
+  max-width: 680px;
+  opacity: 0.95;
+  margin-bottom: 1.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   SECCIÓN: BENEFICIOS
+   -------------------------------------------------------------------------- */
+.beneficios-section {
+  background-color: var(--color-white);
+  padding: 5rem 0 6rem;
+}
+
+.beneficios-title {
+  font-family: var(--font-family-base);
+  font-size: clamp(2.2rem, 3.5vw + 0.5rem, 3rem);
+  font-weight: var(--font-weight-black);
+  color: #111;
+  margin-bottom: 3.5rem;
+  letter-spacing: -0.01em;
+}
+
+.beneficios-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.beneficio-card {
+  padding: 0 1.5rem 0 2rem;
+  position: relative;
+  border-left: 1px solid rgba(150, 0, 25, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+.beneficio-card:first-child {
+  border-left: none;
+  padding-left: 0;
+}
+
+.beneficio-card:last-child {
+  padding-right: 0;
+}
+
+.beneficio-icon {
+  width: 44px;
+  height: 44px;
+  background-color: var(--color-header-footer);
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  mask-position: left center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  -webkit-mask-position: left center;
+  display: block;
+  margin-bottom: 1.25rem;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.beneficio-icon.icon-persona {
+  mask-image: url("../assets/iconos/persona.svg");
+  -webkit-mask-image: url("../assets/iconos/persona.svg");
+}
+
+.beneficio-icon.icon-engranaje {
+  mask-image: url("../assets/iconos/engranaje.svg");
+  -webkit-mask-image: url("../assets/iconos/engranaje.svg");
+}
+
+.beneficio-icon.icon-barras {
+  mask-image: url("../assets/iconos/barras.svg");
+  -webkit-mask-image: url("../assets/iconos/barras.svg");
+}
+
+.beneficio-icon.icon-rayo {
+  mask-image: url("../assets/iconos/rayo.svg");
+  -webkit-mask-image: url("../assets/iconos/rayo.svg");
+}
+
+.beneficio-card:hover .beneficio-icon {
+  transform: translateY(-4px);
+}
+
+.beneficio-card h3 {
+  font-family: var(--font-family-base);
+  font-size: 1.35rem;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.18;
+  color: #111;
+  margin-bottom: 0.85rem;
+}
+
+.beneficio-card p {
+  font-family: var(--font-family-base);
+  font-size: 0.95rem;
+  font-weight: var(--font-weight-book);
+  line-height: 1.45;
+  color: var(--color-header-footer);
+}
 
 @media (max-width: 1024px) {
   .significa-grid {
@@ -346,5 +489,54 @@
 
   .linea-text-col p {
     padding-right: 0;
+  }
+
+  .beneficios-grid {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 2.5rem;
+    column-gap: 0;
+  }
+
+  .beneficio-card {
+    padding: 0 1.5rem;
+  }
+
+  .beneficio-card:nth-child(2n+1) {
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .beneficio-card:nth-child(2n) {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .drones-aplicaciones-content {
+    padding: 3.5rem 0;
+  }
+
+  .beneficios-section {
+    padding: 3.5rem 0;
+  }
+
+  .beneficios-title {
+    margin-bottom: 2.25rem;
+  }
+
+  .beneficios-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .beneficio-card {
+    border-left: none;
+    padding: 0;
+  }
+
+  .cta-section {
+    background-position: 80% top;
+    min-height: 460px;
+    padding: 4rem 0;
   }
 }
