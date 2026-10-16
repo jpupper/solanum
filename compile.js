@@ -48,7 +48,11 @@ async function processDirectory(src, dest) {
       if (['.git', 'node_modules', 'compiled', 'compiled_test', 'solanum'].includes(entry.name)) continue;
       await processDirectory(srcPath, destPath);
     } else {
-      if (['package.json', 'package-lock.json', 'compile.js', 'compile.bat', 'deploy.js', 'deploy.bat', 'ftp_credentials.json', '.gitignore', 'README.md'].includes(entry.name)) {
+      // NO subir al build: tooling de deploy y, sobre todo, app_offline.htm
+      // (en IIS ese archivo PONE EL SITIO EN MANTENIMIENTO: ya tumbo solanum.com.ar una vez)
+      if (['package.json', 'package-lock.json', 'compile.js', 'compile.bat', 'deploy.js', 'deploy.bat',
+           'deploy_http.py', 'deploy_uploader.php', 'app_offline.htm', 'ftp_credentials.json', '.gitignore',
+           'README.md'].includes(entry.name) || entry.name.endsWith('.bak')) {
         continue;
       }
       await processFile(srcPath, destPath);

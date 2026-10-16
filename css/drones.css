@@ -319,7 +319,7 @@
   font-weight: var(--font-weight-black);
   line-height: 1.1;
   margin-bottom: 1rem;
-  max-width: 680px;
+  max-width: 860px;
 }
 
 /* --------------------------------------------------------------------------
@@ -335,9 +335,14 @@
   background-position: center;
 }
 
+.drones-aplicaciones-banner .container {
+  width: 100%;
+}
+
 .drones-aplicaciones-content {
   max-width: 820px;
   padding: 4.5rem 0;
+  margin-left: 0;
 }
 
 .drones-aplicaciones-title {

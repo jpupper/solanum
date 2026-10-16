@@ -10,3 +10,6 @@ Thumbs.db
 ftp_win.txt
 test_ftp_cmd.txt
 
+
+# backup del deploy viejo (tenia la password FTP hardcodeada, no se commitea)
+deploy.js.ftp-broken.bak
