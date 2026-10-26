@@ -32,10 +32,18 @@ USO
     python deploy_http.py --build      # corre node compile.js primero
     python deploy_http.py              # sube solo lo que difiere del server
     python deploy_http.py --todo       # sube todo el build, sin comparar
+    python deploy_http.py --solo=index.html,drones.html   # sube esos archivos a la fuerza
+
+COMPARACION
+-----------
+No alcanza con el tamanio: un cambio de texto puede dejar el archivo igual de pesado
+(paso real: cambiar el ID de un video de YouTube, 11 caracteres por 11 caracteres) y el
+deploy lo daba por "ya igual" sin subirlo. Los archivos de texto se comparan por hash.
 """
 
 import base64
 import ftplib
+import hashlib
 import json
 import os
 import re
@@ -62,7 +70,10 @@ FTP_ROOT = "/public_html"
 SITE = "http://solanum.com.ar"
 
 # archivos del build que NO son del sitio (y app_offline.htm ademas pondria el sitio en mantenimiento)
-EXCLUIR = {"app_offline.htm", "ftp_win.txt", "test_ftp_cmd.txt"}
+EXCLUIR = {"app_offline.htm", "ftp_win.txt", "test_ftp_cmd.txt", "IDEA.md"}
+
+# extensiones de texto: se comparan por hash, no por tamanio (ver difiere())
+TEXTO = (".html", ".htm", ".css", ".js", ".php", ".svg", ".md", ".json", ".xml", ".txt")
 
 
 def password():
@@ -155,6 +166,35 @@ def http_head_size(url):
         return None
 
 
+def http_get(url):
+    try:
+        req = urllib.request.Request(url + "?cb=" + uuid.uuid4().hex,
+                                     headers={"Cache-Control": "no-cache"})
+        with urllib.request.urlopen(req, timeout=120) as r:
+            return r.read()
+    except Exception:
+        return None
+
+
+def difiere(rel, local):
+    """True si el archivo del server no es identico al del build.
+
+    OJO: el tamanio NO alcanza como firma. Un cambio de texto puede dejar el archivo
+    exactamente igual de pesado (paso real: cambiar el ID de un video de YouTube en un
+    iframe, 11 caracteres por 11 caracteres) y el deploy lo daba por "ya igual".
+    Por eso, cuando el tamanio coincide, los archivos de texto se comparan por hash.
+    """
+    if http_head_size(SITE + "/" + quote(rel)) != os.path.getsize(local):
+        return True
+    if rel.lower().endswith(TEXTO):
+        web = http_get(SITE + "/" + quote(rel))
+        if web is None:
+            return True
+        with open(local, "rb") as f:
+            return hashlib.md5(web).hexdigest() != hashlib.md5(f.read()).hexdigest()
+    return False
+
+
 def post_archivo(url, token, rel, local, intentos=3):
     """Manda un archivo por HTTP (multipart, campo f) y devuelve el tamano que reporta el server.
 
@@ -212,20 +252,30 @@ def main():
         return 1
 
     todos = archivos_locales()
+    # --solo=a.html,b.css : subir a la fuerza solo esos archivos (sin comparar)
+    solo = []
+    for a in args:
+        if a.startswith("--solo="):
+            solo = [s.strip().replace("\\", "/") for s in a.split("=", 1)[1].split(",") if s.strip()]
+    if solo:
+        faltan = [s for s in solo if s not in todos]
+        if faltan:
+            print("ABORTO: no estan en el build: %s" % ", ".join(faltan))
+            return 1
+        todos = [s for s in todos if s in solo] or todos
     print("== comparando %d archivos del build contra %s ==" % (len(todos), SITE))
     # estos los maneja IIS/PHP: un HEAD no devuelve su contenido (404/405) y no hay nada que comparar
     SIN_COMPARAR = ("web.config", "enviar-contacto.php")
     pendientes, salteados = [], []
     for rel in todos:
         local = os.path.join(BUILD, rel)
-        if "--todo" in args:
+        if "--todo" in args or solo:
             pendientes.append(rel)
             continue
         if os.path.basename(rel) in SIN_COMPARAR:
             salteados.append(rel)
             continue
-        web = http_head_size(SITE + "/" + quote(rel))
-        if web != os.path.getsize(local):
+        if difiere(rel, local):
             pendientes.append(rel)
     if salteados:
         print("sin comparar (los sirve el server, no son estaticos): %s" % ", ".join(salteados))
