@@ -57,13 +57,18 @@
    2. SECCIÓN: FORMULARIO DE CONTACTO
    -------------------------------------------------------------------------- */
 .contacto-form-section {
-  background-color: var(--color-white);
-  padding: 5rem 0 4.5rem;
+  background-color: var(--color-bg-descanso);
+  padding: 5rem 0 5rem;
 }
 
 .contacto-form-wrapper {
   max-width: 880px;
-  margin: 0;
+  margin: 0 auto;
+  background-color: #FFFFFF;
+  border-radius: 24px;
+  padding: 3.5rem 4rem;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .contacto-form-title {
@@ -366,7 +371,11 @@
 
 @media (max-width: 768px) {
   .contacto-form-section {
-    padding: 3.5rem 0 3rem;
+    padding: 3rem 0;
+  }
+  .contacto-form-wrapper {
+    padding: 2.25rem 1.5rem;
+    border-radius: 18px;
   }
   .contacto-form-grid {
     grid-template-columns: 1fr;

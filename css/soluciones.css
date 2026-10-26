@@ -14,6 +14,10 @@
   overflow: hidden;
 }
 
+.soluciones-hero .container {
+  padding-top: clamp(2rem, 7vh, 4.5rem);
+}
+
 .hero-overlay {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;

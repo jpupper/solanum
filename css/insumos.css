@@ -257,7 +257,8 @@
   background-image: url('../assets/insumos/fondocard.png');
   background-size: cover;
   background-position: center;
-  padding: 4rem 0;
+  padding: 5rem 0;
+  overflow: hidden;
 }
 
 .cta-eyebrow {

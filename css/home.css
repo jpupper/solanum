@@ -62,7 +62,7 @@
    SECCIÓN: SOLUCIONES
    -------------------------------------------------------------------------- */
 .soluciones {
-  padding: var(--spacing-3xl) 0;
+  padding: calc(var(--spacing-3xl) + 2.5rem) 0 var(--spacing-3xl);
   background-color: var(--color-bg-descanso);
 }
 
@@ -499,7 +499,7 @@
 
   /* 2. SOLUCIONES */
   .soluciones {
-    padding: 2.5rem 0 3.5rem;
+    padding: 4.5rem 0 3.5rem;
   }
 
   .soluciones-header {
