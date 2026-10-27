@@ -29,11 +29,42 @@ function renderHeader() {
     </div>
     <div class="mobile-menu-backdrop" id="mobileMenuBackdrop"></div>
     <div class="mobile-menu-panel" id="mobileMenuPanel">
-      <div class="mobile-menu-items">
-        <a href="nosotros.html" class="mobile-menu-pill ${isNosotros ? 'active' : ''}">NOSOTROS</a>
-        <a href="soluciones.html" class="mobile-menu-pill ${isSoluciones ? 'active' : ''}">SOLUCIONES</a>
-        <a href="contacto.html" class="mobile-menu-pill ${isContacto ? 'active' : ''}">CONTACTO</a>
+      <div class="mobile-menu-top">
+        <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Cerrar menú">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
+      <a href="index.html" class="mobile-menu-logo" aria-label="Ir al inicio">
+        <img src="assets/header/logoheader.png" alt="Solanum">
+      </a>
+      <nav class="mobile-menu-items" aria-label="Navegación móvil">
+        <a href="nosotros.html" class="mobile-menu-link">
+          <span>Nosotros</span>
+        </a>
+        <div class="mobile-menu-group open" id="mobileSolucionesGroup">
+          <div class="mobile-menu-link group-toggle" id="solucionesToggle">
+            <span>Soluciones</span>
+            <svg class="chevron-icon chevron-down" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+          <div class="mobile-submenu">
+            <a href="insumos.html" class="mobile-submenu-link">
+              <span>Agronomía</span>
+            </a>
+            <a href="tractores.html" class="mobile-submenu-link">
+              <span>Tractores</span>
+            </a>
+            <a href="drones.html" class="mobile-submenu-link">
+              <span>Drones</span>
+            </a>
+          </div>
+        </div>
+        <a href="contacto.html" class="mobile-menu-link">
+          <span>Contacto</span>
+        </a>
+      </nav>
     </div>
   `;
 
@@ -44,7 +75,19 @@ function initMobileNav() {
   const btn = document.getElementById("hamburgerBtn");
   const panel = document.getElementById("mobileMenuPanel");
   const backdrop = document.getElementById("mobileMenuBackdrop");
+  const closeBtn = document.getElementById("mobileMenuClose");
+  const solucionesToggle = document.getElementById("solucionesToggle");
+  const solucionesGroup = document.getElementById("mobileSolucionesGroup");
   if (!btn || !panel) return;
+
+  // Mover panel y backdrop directo a document.body para que queden fijos al viewport actual
+  // y no dependan del contexto de apilamiento ni del scroll del header
+  if (backdrop && backdrop.parentElement !== document.body) {
+    document.body.appendChild(backdrop);
+  }
+  if (panel && panel.parentElement !== document.body) {
+    document.body.appendChild(panel);
+  }
 
   function toggleMenu(forceOpen) {
     const isOpen = typeof forceOpen === "boolean" ? forceOpen : !panel.classList.contains("open");
@@ -59,11 +102,31 @@ function initMobileNav() {
     toggleMenu();
   });
 
+  if (closeBtn) {
+    closeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleMenu(false);
+    });
+  }
+
   if (backdrop) {
     backdrop.addEventListener("click", () => {
       toggleMenu(false);
     });
   }
+
+  if (solucionesToggle && solucionesGroup) {
+    solucionesToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      solucionesGroup.classList.toggle("open");
+    });
+  }
+
+  panel.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      toggleMenu(false);
+    });
+  });
 
   document.addEventListener("click", (e) => {
     if (panel.classList.contains("open") && !panel.contains(e.target) && !btn.contains(e.target)) {
@@ -75,12 +138,6 @@ function initMobileNav() {
     if (e.key === "Escape" && panel.classList.contains("open")) {
       toggleMenu(false);
     }
-  });
-
-  panel.querySelectorAll(".mobile-menu-pill").forEach(link => {
-    link.addEventListener("click", () => {
-      toggleMenu(false);
-    });
   });
 }
 
@@ -117,9 +174,9 @@ function renderFooter() {
       <div class="footer-col">
         <h4>SEGUINOS</h4>
         <div class="social-links">
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><img src="assets/footer/ig.png" alt="Instagram"></a>
-          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><img src="assets/footer/youtube.png" alt="YouTube"></a>
-          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><img src="assets/footer/linkedin.png" alt="LinkedIn"></a>
+          <a href="https://www.instagram.com/solanumagricola/?hl=es" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><img src="assets/footer/ig.png" alt="Instagram"></a>
+          <a href="https://www.youtube.com/@solanumagro" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><img src="assets/footer/youtube.png" alt="YouTube"></a>
+          <a href="https://www.linkedin.com/in/solanum-agro/?isSelfProfile=false" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><img src="assets/footer/linkedin.png" alt="LinkedIn"></a>
         </div>
       </div>
     </div>

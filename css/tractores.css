@@ -364,6 +364,15 @@
   line-height: 1.1;
 }
 
+.tractor-potencia {
+  display: block;
+  font-size: clamp(1.15rem, 1.6vw, 1.35rem);
+  font-weight: var(--font-weight-black);
+  color: #111111;
+  margin-top: 0.35rem;
+  letter-spacing: -0.01em;
+}
+
 .linea-text-col p {
   font-family: var(--font-family-base);
   font-size: 1.15rem;
