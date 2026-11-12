@@ -166,7 +166,7 @@ function renderFooter() {
       <div class="footer-col">
         <h4>CONTACTO</h4>
         <p>Av. Paula Albarracín<br>
-          de Sarmiento, San Juan<br>
+          de Sarmiento 540 sur, San Juan<br>
           0264 456-5402<br>
           info@solanum.com.ar</p>
       </div>
@@ -192,7 +192,7 @@ function initScrollAnimations() {
     rootMargin: "0px 0px -40px 0px"
   };
 
-  const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+  const revealOnScroll = new IntersectionObserver(function (entries, observer) {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add("active");
@@ -409,12 +409,12 @@ function initYouTubeBackgrounds() {
     document.head.appendChild(tag);
   }
 
-  window.onYouTubeIframeAPIReady = function() {
+  window.onYouTubeIframeAPIReady = function () {
     iframes.forEach(iframe => {
       let interval;
       new YT.Player(iframe, {
         events: {
-          'onStateChange': function(event) {
+          'onStateChange': function (event) {
             if (event.data === YT.PlayerState.PLAYING) {
               if (interval) clearInterval(interval);
               interval = setInterval(() => {
@@ -563,7 +563,7 @@ function setupDroneOnCanvas(canvas, section) {
         firstLineHeight = r0.height || 36;
         textRight = r0.right;
       }
-    } catch (e) {}
+    } catch (e) { }
 
     if (!textRight) {
       const tRect = titleEl.getBoundingClientRect();
