@@ -67,7 +67,10 @@ NOMBRE_APLICADOR = "deploy_uploader.php"
 FTP_HOST = "wi551474.ferozo.com"
 FTP_USER = "wi551474@wi551474.ferozo.com"
 FTP_ROOT = "/public_html"
-SITE = "http://solanum.com.ar"
+# OJO: el hosting fuerza HTTPS con un 301 permanente. Postear a http:// hace que urllib
+# siga el redirect y convierta el POST en GET -> el aplicador no recibe el token y
+# devuelve 403 ('no') en TODOS los archivos. Certificado Sectigo valido, asi que https anda.
+SITE = "https://solanum.com.ar"
 
 # archivos del build que NO son del sitio (y app_offline.htm ademas pondria el sitio en mantenimiento)
 EXCLUIR = {"app_offline.htm", "ftp_win.txt", "test_ftp_cmd.txt", "IDEA.md"}
